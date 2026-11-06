@@ -112,7 +112,7 @@
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 6. Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 7. Updated weekly. Ticking Watched is saved only in this browser.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -198,7 +198,7 @@ function renderList() {
         return `<div class="row${isW ? " watched" : ""}">${chev}
           <div class="art">${m.img ? `<img src="${esc(m.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</div>
           <div class="main"><div class="title">${esc(r.title)}</div>
-            <div class="meta">${esc(r.type)} · ${esc(r.genre)}</div>
+            <div class="meta">${esc([r.type, r.genre, m.eps ? m.eps + (m.eps === 1 ? " episode" : " episodes") : "", m.avg ? "Avg runtime " + m.avg + " min" : ""].filter(Boolean).join(" • "))}</div>
             <div class="badges">
               <span class="b ${statusClass(r.status)}">${esc(r.status)}</span>
               ${r.rt != null ? `<span class="b info">RT ${esc(r.rt)}%</span>` : ""}
@@ -284,14 +284,23 @@ async function loadMeta() {
   let cache = {}; try { cache = JSON.parse(localStorage.getItem("tvmazeCache") || "{}"); } catch (e) {}
   const now = Date.now(), WEEK = 7 * 864e5;
   const ids = [...new Set(DATA.map(r => r.tvmazeId).filter(Boolean))];
-  for (const id of ids) if (cache[id] && now - cache[id].t < WEEK) META[id] = cache[id];
+  for (const id of ids) if (cache[id] && cache[id].v === 2 && now - cache[id].t < WEEK) META[id] = cache[id];
   renderList();
   for (const id of ids.filter(i => !META[i])) {
     try {
-      const r = await fetch("https://api.tvmaze.com/shows/" + id);
+      const r = await fetch("https://api.tvmaze.com/shows/" + id + "?embed=episodes");
       if (r.ok) {
         const j = await r.json();
-        META[id] = cache[id] = { t: Date.now(), img: (j.image && (j.image.medium || j.image.original)) || "", desc: strip(j.summary) };
+        // Episode count and average runtime for the season the listing is about:
+        // "(S4)" or "(Part 4)" in the title, otherwise the newest season TVmaze knows.
+        const title = (DATA.find(d => d.tvmazeId === id) || {}).title || "";
+        const sm = /\((?:S|Part )(\d+)\)/.exec(title);
+        const all = ((j._embedded && j._embedded.episodes) || []).filter(e => e.type === "regular" || !e.type);
+        const season = sm ? Number(sm[1]) : Math.max(0, ...all.map(e => e.season));
+        const eps = all.filter(e => e.season === season);
+        const rts = eps.map(e => e.runtime).filter(Boolean);
+        const avg = rts.length ? Math.round(rts.reduce((a, b) => a + b, 0) / rts.length) : (eps.length ? (j.averageRuntime || j.runtime || 0) : 0);
+        META[id] = cache[id] = { v: 2, t: Date.now(), img: (j.image && (j.image.medium || j.image.original)) || "", desc: strip(j.summary), eps: eps.length, avg: avg || 0 };
         try { localStorage.setItem("tvmazeCache", JSON.stringify(cache)); } catch (e) {}
         renderList();
       }
