@@ -57,6 +57,17 @@
   .more { background: none; border: 0; color: var(--accent); font: inherit; cursor: pointer; padding: 0 2px; }
   .viewbtn { margin-right: 12px; border-color: var(--accent); }
   .bar .search { margin-left: 0; }
+  .trbtn { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 6px; padding: 4px 10px; font: inherit; font-size: 12px; font-weight: bold; cursor: pointer; }
+  .src .acts { display: flex; align-items: center; gap: 14px; }
+  #tr { position: fixed; right: 20px; bottom: 20px; width: 480px; min-width: 280px; max-width: calc(100vw - 16px); z-index: 50; background: #111; color: #fff;
+        border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,.45); overflow: hidden; resize: horizontal; display: flex; flex-direction: column; }
+  #tr[hidden] { display: none; }
+  #tr .bar2 { display: flex; align-items: center; gap: 10px; padding: 6px 8px 6px 12px; cursor: move; user-select: none; touch-action: none; font-size: 13px; background: #222; }
+  #tr .ttl { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; }
+  #tr a { color: #9cc0ff; font-size: 12px; white-space: nowrap; }
+  #tr button { background: none; border: 0; color: #fff; font-size: 20px; line-height: 1; cursor: pointer; padding: 2px 6px; }
+  #tr .vid { aspect-ratio: 16 / 9; width: 100%; background: #000; }
+  #tr iframe { width: 100%; height: 100%; border: 0; display: block; }
   h2.grp { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
   h2.grp .chev { width: 26px; height: 26px; grid-row: auto; }
   .row.watched { opacity: .55; }
@@ -77,6 +88,7 @@
   .empty { color: var(--muted); padding: 24px 0; }
   footer { margin-top: 36px; color: var(--muted); font-size: 12px; }
   @media (max-width: 560px) {
+    #tr { width: calc(100vw - 16px); right: 8px; bottom: 8px; }
     .row { grid-template-columns: 30px 96px 1fr; }
     .row.collapsed { grid-template-columns: 30px 1fr auto; }
     .art { width: 96px; height: 96px; grid-row: 1 / span 2; }
@@ -98,8 +110,12 @@
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 3. Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 4. Updated weekly. Ticking Watched is saved only in this browser.
   </footer>
+</div>
+<div id="tr" hidden role="dialog" aria-label="Trailer">
+  <div class="bar2" id="trbar"><span class="ttl" id="trtitle"></span><a id="trlink" target="_blank" rel="noopener">Open on YouTube</a><button id="trx" aria-label="Close trailer">×</button></div>
+  <div class="vid" id="trvid"></div>
 </div>
 <script>
 const $ = (s) => document.querySelector(s);
@@ -188,10 +204,12 @@ function renderList() {
           ${descHtml ? `<div class="desc">${descHtml}</div>` : ""}
           ${r.notes ? `<div class="note">${esc(r.notes)}</div>` : ""}
           <div class="src"><span>Source: ${esc(r.source)}</span>
-            <label><input type="checkbox" data-t="${esc(r.title)}" ${isW ? "checked" : ""}> Watched</label></div>
+            <span class="acts">${r.trailer ? `<button class="trbtn" data-tr="${esc(r.trailer)}" data-tt="${esc(r.title)}">▶ Watch trailer</button>` : ""}
+            <label><input type="checkbox" data-t="${esc(r.title)}" ${isW ? "checked" : ""}> Watched</label></span></div>
         </div>`;
       }).join("") + (gc ? "" : "</div>");
   }).join("");
+  document.querySelectorAll("button[data-tr]").forEach(b => b.onclick = () => openTrailer(b.dataset.tr, b.dataset.tt));
   document.querySelectorAll("button[data-c]").forEach(b => b.onclick = () => {
     const t = b.dataset.c; rowOv[t] = !isCollapsed(t); keep("rowOv", rowOv); renderList();
   });
@@ -206,6 +224,34 @@ function renderList() {
   });
 }
 function render() { renderBar(); renderList(); }
+
+// ---- Floating trailer window: drag by the title bar, resize from the lower edge; Esc or × closes it ----
+function openTrailer(id, title) {
+  if (!/^[\w-]{6,20}$/.test(id)) return;
+  $("#trtitle").textContent = title + " – trailer";
+  $("#trlink").href = "https://www.youtube.com/watch?v=" + id;
+  $("#trvid").innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0" title="Trailer" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+  $("#tr").hidden = false;
+}
+function closeTrailer() { $("#trvid").innerHTML = ""; $("#tr").hidden = true; }
+$("#trx").onclick = closeTrailer;
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#tr").hidden) closeTrailer(); });
+(() => {
+  const box = $("#tr"), bar = $("#trbar"); let dx = 0, dy = 0, drag = false;
+  bar.addEventListener("pointerdown", (e) => {
+    if (e.target.closest("a,button")) return;
+    const r = box.getBoundingClientRect(); dx = e.clientX - r.left; dy = e.clientY - r.top; drag = true;
+    box.style.left = r.left + "px"; box.style.top = r.top + "px"; box.style.right = "auto"; box.style.bottom = "auto";
+    bar.setPointerCapture(e.pointerId);
+  });
+  bar.addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    const x = Math.min(Math.max(0, e.clientX - dx), innerWidth - 80), y = Math.min(Math.max(0, e.clientY - dy), innerHeight - 40);
+    box.style.left = x + "px"; box.style.top = y + "px";
+  });
+  const end = () => { drag = false; };
+  bar.addEventListener("pointerup", end); bar.addEventListener("pointercancel", end);
+})();
 render();
 
 const DATA_URL = "https://raw.githubusercontent.com/mpgfi/streaming-watchlist/main/watchlist.json";
