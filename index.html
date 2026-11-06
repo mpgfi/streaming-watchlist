@@ -38,17 +38,27 @@
   h2 { font-size: 17px; margin: 28px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--accent); }
   h2 span { color: var(--muted); font-weight: normal; font-size: 13px; margin-left: 6px; }
   .grid { display: grid; gap: 10px; }
-  .row { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px;
-         display: grid; grid-template-columns: 150px 1fr auto; gap: 6px 14px; }
-  .art { width: 150px; height: 150px; background: #333333; border-radius: 6px; overflow: hidden; grid-row: 1 / span 4; }
+  .row { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 14px 12px 8px;
+         display: grid; grid-template-columns: 30px 150px 1fr auto; gap: 6px 14px; align-items: start; }
+  .row.collapsed { grid-template-columns: 30px 1fr auto; padding-block: 6px; align-items: center; }
+  .row.collapsed .title { font-size: 15px; }
+  .chev { width: 30px; height: 30px; border: 0; background: none; color: var(--muted); cursor: pointer; border-radius: 6px;
+          display: flex; align-items: center; justify-content: center; padding: 0; grid-column: 1; grid-row: 1; }
+  .chev:hover { background: var(--line); color: var(--text); }
+  .chev svg { width: 14px; height: 14px; transition: transform .15s; transform: rotate(90deg); }
+  .collapsed .chev svg, .grp.collapsed .chev svg { transform: rotate(0deg); }
+  .art { width: 150px; height: 150px; background: #333333; border-radius: 6px; overflow: hidden; grid-column: 2; grid-row: 1 / span 4; }
   .art img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
-  .desc { grid-column: 2 / -1; font-size: 13px; color: var(--text); }
+  .row > .main { grid-column: 3; min-width: 0; }
+  .row > .right { grid-column: 4; }
+  .row.collapsed > .main { grid-column: 2; }
+  .row.collapsed > .right { grid-column: 3; }
+  .desc { grid-column: 3 / -1; font-size: 13px; color: var(--text); }
   .more { background: none; border: 0; color: var(--accent); font: inherit; cursor: pointer; padding: 0 2px; }
-  .compact .row { grid-template-columns: 1fr auto; padding: 8px 14px; align-items: baseline; }
-  .compact .row .title { font-size: 15px; }
-  .compact .row.watched { opacity: .55; }
   .viewbtn { margin-right: 12px; border-color: var(--accent); }
   .bar .search { margin-left: 0; }
+  h2.grp { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
+  h2.grp .chev { width: 26px; height: 26px; grid-row: auto; }
   .row.watched { opacity: .55; }
   .row.watched .title { text-decoration: line-through; }
   .title { font-weight: bold; font-size: 16px; }
@@ -61,18 +71,20 @@
   .b.ok { background: var(--ok-bg); color: var(--ok-ink); }
   .b.warn { background: var(--warn-bg); color: var(--warn-ink); }
   .b.info { background: var(--info-bg); color: var(--info-ink); }
-  .note { grid-column: 2 / -1; font-size: 13px; }
-  .src { grid-column: 2 / -1; font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .note { grid-column: 3 / -1; font-size: 13px; }
+  .src { grid-column: 3 / -1; font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   .src label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
   .empty { color: var(--muted); padding: 24px 0; }
   footer { margin-top: 36px; color: var(--muted); font-size: 12px; }
   @media (max-width: 560px) {
-    .row { grid-template-columns: 96px 1fr; }
+    .row { grid-template-columns: 30px 96px 1fr; }
+    .row.collapsed { grid-template-columns: 30px 1fr auto; }
     .art { width: 96px; height: 96px; grid-row: 1 / span 2; }
-    .right { grid-column: 2; }
+    .row > .main { grid-column: 3; }
+    .row > .right { grid-column: 3; grid-row: 2; text-align: left; }
+    .row.collapsed > .main { grid-column: 2; }
+    .row.collapsed > .right { grid-column: 3; grid-row: 1; text-align: right; }
     .desc, .note, .src { grid-column: 1 / -1; }
-    .compact .row { grid-template-columns: 1fr auto; }
-    .right { text-align: left; }
     .search { margin-left: 0; width: 100%; }
   }
 </style>
@@ -86,7 +98,7 @@
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 2. Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 3. Updated weekly. Ticking Watched is saved only in this browser.
   </footer>
 </div>
 <script>
@@ -95,6 +107,11 @@ const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&l
 let DATA = [], loaded = false, service = "All", query = "", hideWatched = false;
 let compact = false; try { compact = localStorage.getItem("compact") === "1"; } catch (e) {}
 const META = {};            // tvmazeId -> {img, desc}
+const CHEV = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M3 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+let rowOv = {}, grpCollapsed = {};   // per-row overrides (true = collapsed) and collapsed service groups
+try { rowOv = JSON.parse(localStorage.getItem("rowOv") || "{}"); grpCollapsed = JSON.parse(localStorage.getItem("grpCollapsed") || "{}"); } catch (e) {}
+const keep = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+const isCollapsed = (t) => (t in rowOv) ? rowOv[t] : compact;
 const openDesc = new Set(); // ids whose full description is expanded
 
 function loadWatched() { try { return JSON.parse(localStorage.getItem("watched") || "{}"); } catch (e) { return {}; } }
@@ -122,7 +139,7 @@ function renderBar() {
     `<button class="chip" data-s="${esc(s)}" aria-pressed="${s === service}">${esc(s)}</button>`).join("") +
     `<label class="toggle"><input type="checkbox" id="hw" ${hideWatched ? "checked" : ""}> Hide watched</label>` +
     `<input class="search" id="q" type="search" placeholder="Search titles" value="${esc(query)}" aria-label="Search titles">`;
-  $("#view").onclick = () => { compact = !compact; try { localStorage.setItem("compact", compact ? "1" : "0"); } catch (e) {} render(); };
+  $("#view").onclick = () => { compact = !compact; rowOv = {}; grpCollapsed = {}; try { localStorage.setItem("compact", compact ? "1" : "0"); } catch (e) {} keep("rowOv", rowOv); keep("grpCollapsed", grpCollapsed); render(); };
   document.querySelectorAll(".chip[data-s]").forEach(b => b.onclick = () => { service = b.dataset.s; render(); });
   $("#hw").onchange = (e) => { hideWatched = e.target.checked; renderList(); };
   $("#q").oninput = (e) => { query = e.target.value.toLowerCase(); renderList(); };
@@ -138,26 +155,29 @@ function renderList() {
   if (!rows.length) { $("#out").innerHTML = '<p class="empty">Nothing matches.</p>'; return; }
   const by = {};
   rows.forEach(r => (by[r.service] = by[r.service] || []).push(r));
-  $("#out").className = compact ? "compact" : "";
   $("#out").innerHTML = Object.keys(by).sort().map(s => {
     const list = by[s].slice().sort((a, b) => {
       const da = a.date || "9999", db = b.date || "9999";
       return da < db ? -1 : da > db ? 1 : a.title.localeCompare(b.title);
     });
-    return `<h2>${esc(s)}<span>${list.length} title${list.length === 1 ? "" : "s"}</span></h2><div class="grid">` +
-      list.map(r => {
+    const gc = !!grpCollapsed[s];
+    return `<h2 class="grp${gc ? " collapsed" : ""}" data-g="${esc(s)}" role="button" tabindex="0" aria-expanded="${!gc}"><button class="chev" tabindex="-1" aria-hidden="true">${CHEV}</button>${esc(s)}<span>${list.length} title${list.length === 1 ? "" : "s"}</span></h2>` +
+      (gc ? "" : '<div class="grid">') +
+      (gc ? [] : list).map(r => {
         const n = daysUntil(r.date), isW = !!watched[r.title];
         const m = META[r.tvmazeId] || {};
         const full = m.desc || "", isOpen = openDesc.has(r.tvmazeId);
         const descHtml = !full ? "" : (full.length <= 160 || isOpen)
           ? esc(full)
           : esc(full.slice(0, 160).replace(/\s+\S*$/, "")) + ` <button class="more" data-d="${r.tvmazeId}" title="Show full description">…</button>`;
-        if (compact) return `<div class="row${isW ? " watched" : ""}">
-          <div class="title">${esc(r.title)}</div>
+        const col = isCollapsed(r.title);
+        const chev = `<button class="chev" data-c="${esc(r.title)}" aria-expanded="${!col}" aria-label="${col ? "Expand" : "Collapse"} ${esc(r.title)}" title="${col ? "Expand" : "Collapse"}">${CHEV}</button>`;
+        if (col) return `<div class="row collapsed${isW ? " watched" : ""}">${chev}
+          <div class="main"><div class="title">${esc(r.title)}</div></div>
           <div class="right"><span class="date">${esc(r.dateLabel)}</span></div></div>`;
-        return `<div class="row${isW ? " watched" : ""}">
+        return `<div class="row${isW ? " watched" : ""}">${chev}
           <div class="art">${m.img ? `<img src="${esc(m.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</div>
-          <div><div class="title">${esc(r.title)}</div>
+          <div class="main"><div class="title">${esc(r.title)}</div>
             <div class="meta">${esc(r.type)} · ${esc(r.genre)}</div>
             <div class="badges">
               <span class="b ${statusClass(r.status)}">${esc(r.status)}</span>
@@ -170,8 +190,15 @@ function renderList() {
           <div class="src"><span>Source: ${esc(r.source)}</span>
             <label><input type="checkbox" data-t="${esc(r.title)}" ${isW ? "checked" : ""}> Watched</label></div>
         </div>`;
-      }).join("") + "</div>";
+      }).join("") + (gc ? "" : "</div>");
   }).join("");
+  document.querySelectorAll("button[data-c]").forEach(b => b.onclick = () => {
+    const t = b.dataset.c; rowOv[t] = !isCollapsed(t); keep("rowOv", rowOv); renderList();
+  });
+  document.querySelectorAll("h2.grp").forEach(g => {
+    const flip = () => { const s = g.dataset.g; grpCollapsed[s] = !grpCollapsed[s]; if (!grpCollapsed[s]) delete grpCollapsed[s]; keep("grpCollapsed", grpCollapsed); renderList(); };
+    g.onclick = flip; g.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); } };
+  });
   document.querySelectorAll('button[data-d]').forEach(b => b.onclick = () => { openDesc.add(Number(b.dataset.d)); renderList(); });
   document.querySelectorAll('input[data-t]').forEach(c => c.onchange = () => {
     if (c.checked) watched[c.dataset.t] = true; else delete watched[c.dataset.t];
