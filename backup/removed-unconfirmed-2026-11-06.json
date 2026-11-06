@@ -66,22 +66,6 @@
    "major": true
   },
   {
-   "title": "Neuromancer",
-   "service": "Apple TV",
-   "type": "New series",
-   "genre": "Sci-fi",
-   "date": "2027-01-22",
-   "dateLabel": "22 Jan 2027",
-   "status": "Reported",
-   "notes": "From release calendars, not yet an official Apple date",
-   "source": "releases.com, applesfera.com",
-   "rt": null,
-   "mc": null,
-   "slug": "neuromancer",
-   "tvmazeId": 75029,
-   "major": true
-  },
-  {
    "title": "Only Murders in the Building (new season)",
    "service": "Disney+",
    "type": "Returning season",

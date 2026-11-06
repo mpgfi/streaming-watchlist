@@ -166,6 +166,22 @@
    "slug": "harry-potter-hbo-series",
    "tvmazeId": 68803,
    "major": true
+  },
+  {
+   "title": "Neuromancer",
+   "service": "Apple TV",
+   "type": "New series",
+   "genre": "Sci-fi",
+   "date": "2027-01-22",
+   "dateLabel": "22 Jan 2027",
+   "status": "Reported",
+   "notes": "Official date from Apple (San Diego Comic-Con 2026). Apple TV originals launch worldwide, including Sweden.",
+   "source": "apple.com/tv-pr (Apple press release, global launch)",
+   "rt": null,
+   "mc": null,
+   "slug": "neuromancer",
+   "tvmazeId": 75029,
+   "major": true
   }
  ]
 }
