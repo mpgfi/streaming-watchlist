@@ -47,7 +47,7 @@
   .compact .row { grid-template-columns: 1fr auto; padding: 8px 14px; align-items: baseline; }
   .compact .row .title { font-size: 15px; }
   .compact .row.watched { opacity: .55; }
-  .viewbtn { margin-left: auto; }
+  .viewbtn { margin-right: 12px; border-color: var(--accent); }
   .bar .search { margin-left: 0; }
   .row.watched { opacity: .55; }
   .row.watched .title { text-decoration: line-through; }
@@ -86,7 +86,7 @@
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 2. Updated weekly. Ticking Watched is saved only in this browser.
   </footer>
 </div>
 <script>
@@ -118,11 +118,10 @@ function statusClass(s) { s = s || ""; return s.startsWith("Confirmed") ? "ok" :
 function renderBar() {
   const services = [...new Set(DATA.map(r => r.service))].sort();
   if (service !== "All" && !services.includes(service)) service = "All";
-  $("#bar").innerHTML = ["All", ...services].map(s =>
+  $("#bar").innerHTML = `<button class="chip viewbtn" id="view" aria-pressed="false">${compact ? "Expand all" : "Compress all"}</button>` + ["All", ...services].map(s =>
     `<button class="chip" data-s="${esc(s)}" aria-pressed="${s === service}">${esc(s)}</button>`).join("") +
     `<label class="toggle"><input type="checkbox" id="hw" ${hideWatched ? "checked" : ""}> Hide watched</label>` +
-    `<input class="search" id="q" type="search" placeholder="Search titles" value="${esc(query)}" aria-label="Search titles">` +
-    `<button class="chip viewbtn" id="view" aria-pressed="false">${compact ? "Expand all" : "Compress all"}</button>`;
+    `<input class="search" id="q" type="search" placeholder="Search titles" value="${esc(query)}" aria-label="Search titles">`;
   $("#view").onclick = () => { compact = !compact; try { localStorage.setItem("compact", compact ? "1" : "0"); } catch (e) {} render(); };
   document.querySelectorAll(".chip[data-s]").forEach(b => b.onclick = () => { service = b.dataset.s; render(); });
   $("#hw").onchange = (e) => { hideWatched = e.target.checked; renderList(); };
