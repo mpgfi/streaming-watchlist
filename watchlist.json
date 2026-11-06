@@ -1606,6 +1606,67 @@
    "rt": null,
    "mc": null,
    "slug": "where-s-wanda-s2"
+  },
+  {
+   "title": "Percy Jackson and the Olympians (S3)",
+   "service": "Disney+",
+   "type": "Returning season",
+   "genre": "Fantasy",
+   "date": "2026-11-20",
+   "dateLabel": "20 Nov 2026",
+   "status": "Confirmed",
+   "notes": "Two-episode premiere, then weekly",
+   "source": "whatsondisneyplus.com",
+   "rt": 95,
+   "mc": 73,
+   "slug": "percy-jackson-and-the-olympians-s3",
+   "tvmazeId": 48108,
+   "trailer": "UrJmNU1GeMg",
+   "major": true
+  },
+  {
+   "title": "Harry Potter (HBO series)",
+   "service": "HBO Max",
+   "type": "New series",
+   "genre": "Fantasy",
+   "date": "2026-12-25",
+   "dateLabel": "25 Dec 2026",
+   "status": "Reported",
+   "notes": "Christmas Day per HBO Max slate; some older sources said 2027, so re-check",
+   "source": "khaleejtimes.com, moviezine.se",
+   "rt": null,
+   "mc": null,
+   "slug": "harry-potter-hbo-series",
+   "tvmazeId": 68803,
+   "major": true
+  },
+  {
+   "title": "Locker Diaries: Coven Academy",
+   "service": "Disney+",
+   "type": "New series",
+   "genre": "",
+   "date": "2026-10-17",
+   "dateLabel": "17 Oct 2026",
+   "status": "Reported",
+   "notes": "Date from a US schedule",
+   "source": "tomsguide.com",
+   "rt": null,
+   "mc": null,
+   "slug": "locker-diaries-coven-academy"
+  },
+  {
+   "title": "Hollywood Arts",
+   "service": "Netflix",
+   "type": "New series",
+   "genre": "",
+   "date": "2026-10-15",
+   "dateLabel": "15 Oct 2026",
+   "status": "Confirmed",
+   "notes": "",
+   "source": "metromode.se",
+   "rt": null,
+   "mc": null,
+   "slug": "hollywood-arts"
   }
  ]
 }
