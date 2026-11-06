@@ -14,7 +14,8 @@
    "rt": 94,
    "mc": 75,
    "slug": "a-knight-of-the-seven-kingdoms-s2",
-   "tvmazeId": 53063
+   "tvmazeId": 53063,
+   "major": true
   },
   {
    "title": "American Horror Story (S13)",
@@ -29,7 +30,8 @@
    "rt": 75,
    "mc": 65,
    "slug": "american-horror-story-s13",
-   "tvmazeId": 30
+   "tvmazeId": 30,
+   "major": true
   },
   {
    "title": "Black Doves (S2)",
@@ -45,7 +47,8 @@
    "mc": 79,
    "slug": "black-doves-s2",
    "tvmazeId": 68407,
-   "trailer": "ItRs47e7xOs"
+   "trailer": "ItRs47e7xOs",
+   "major": true
   },
   {
    "title": "Blade Runner 2099",
@@ -61,7 +64,8 @@
    "mc": null,
    "slug": "blade-runner-2099",
    "tvmazeId": 60458,
-   "trailer": "vfTiEyJTcjU"
+   "trailer": "vfTiEyJTcjU",
+   "major": true
   },
   {
    "title": "Dune: Prophecy (S2)",
@@ -76,7 +80,8 @@
    "rt": 64,
    "mc": 64,
    "slug": "dune-prophecy-s2",
-   "tvmazeId": 42846
+   "tvmazeId": 42846,
+   "major": true
   },
   {
    "title": "Harry Potter (HBO series)",
@@ -91,7 +96,8 @@
    "rt": null,
    "mc": null,
    "slug": "harry-potter-hbo-series",
-   "tvmazeId": 68803
+   "tvmazeId": 68803,
+   "major": true
   },
   {
    "title": "Industry (S5)",
@@ -106,7 +112,8 @@
    "rt": 91,
    "mc": 81,
    "slug": "industry-s5",
-   "tvmazeId": 45501
+   "tvmazeId": 45501,
+   "major": true
   },
   {
    "title": "Neuromancer",
@@ -121,7 +128,8 @@
    "rt": null,
    "mc": null,
    "slug": "neuromancer",
-   "tvmazeId": 75029
+   "tvmazeId": 75029,
+   "major": true
   },
   {
    "title": "Only Murders in the Building (new season)",
@@ -136,7 +144,8 @@
    "rt": 95,
    "mc": 77,
    "slug": "only-murders-in-the-building-new-season",
-   "tvmazeId": 48830
+   "tvmazeId": 48830,
+   "major": true
   },
   {
    "title": "Percy Jackson and the Olympians (S3)",
@@ -152,7 +161,8 @@
    "mc": 73,
    "slug": "percy-jackson-and-the-olympians-s3",
    "tvmazeId": 48108,
-   "trailer": "UrJmNU1GeMg"
+   "trailer": "UrJmNU1GeMg",
+   "major": true
   },
   {
    "title": "Pride and Prejudice",
@@ -167,7 +177,8 @@
    "rt": null,
    "mc": null,
    "slug": "pride-and-prejudice",
-   "tvmazeId": 84008
+   "tvmazeId": 84008,
+   "major": true
   },
   {
    "title": "Silo (S4)",
@@ -182,7 +193,8 @@
    "rt": 92,
    "mc": 77,
    "slug": "silo-s4",
-   "tvmazeId": 38052
+   "tvmazeId": 38052,
+   "major": true
   },
   {
    "title": "The Empress / Kejsarinnan (S3)",
@@ -198,7 +210,8 @@
    "mc": null,
    "slug": "the-empress-kejsarinnan-s3",
    "tvmazeId": 59746,
-   "trailer": "Rrg7p78KrBk"
+   "trailer": "Rrg7p78KrBk",
+   "major": true
   },
   {
    "title": "The Gilded Age (S4)",
@@ -214,7 +227,8 @@
    "mc": 71,
    "slug": "the-gilded-age-s4",
    "tvmazeId": 34685,
-   "trailer": "MqRa6X31lUk"
+   "trailer": "MqRa6X31lUk",
+   "major": true
   },
   {
    "title": "The Greatest",
@@ -229,7 +243,8 @@
    "rt": null,
    "mc": null,
    "slug": "the-greatest",
-   "tvmazeId": 78326
+   "tvmazeId": 78326,
+   "major": true
   },
   {
    "title": "The Hunting Wives (S2)",
@@ -245,7 +260,8 @@
    "mc": 73,
    "slug": "the-hunting-wives-s2",
    "tvmazeId": 72427,
-   "trailer": "Vhwp06fwk6k"
+   "trailer": "Vhwp06fwk6k",
+   "major": true
   },
   {
    "title": "The Last of Us (S3)",
@@ -260,7 +276,8 @@
    "rt": 94,
    "mc": 83,
    "slug": "the-last-of-us-s3",
-   "tvmazeId": 46562
+   "tvmazeId": 46562,
+   "major": true
   },
   {
    "title": "The Paper (S2)",
@@ -275,7 +292,8 @@
    "rt": 81,
    "mc": null,
    "slug": "the-paper-s2",
-   "tvmazeId": 84611
+   "tvmazeId": 84611,
+   "major": true
   },
   {
    "title": "The Rings of Power (S3)",
@@ -291,7 +309,8 @@
    "mc": 70,
    "slug": "the-rings-of-power-s3",
    "tvmazeId": 33352,
-   "trailer": "I_n4aqsFiGE"
+   "trailer": "I_n4aqsFiGE",
+   "major": true
   },
   {
    "title": "The White Lotus (S4)",
@@ -306,7 +325,8 @@
    "rt": 90,
    "mc": 80,
    "slug": "the-white-lotus-s4",
-   "tvmazeId": 51394
+   "tvmazeId": 51394,
+   "major": true
   },
   {
    "title": "True Detective (S5)",
@@ -321,7 +341,8 @@
    "rt": 78,
    "mc": 75,
    "slug": "true-detective-s5",
-   "tvmazeId": 5
+   "tvmazeId": 5,
+   "major": true
   },
   {
    "title": "Yellowjackets (S4)",
@@ -336,7 +357,8 @@
    "rt": 92,
    "mc": 74,
    "slug": "yellowjackets-new-season",
-   "tvmazeId": 36672
+   "tvmazeId": 36672,
+   "major": true
   },
   {
    "title": "The Diplomat (S4)",
@@ -351,7 +373,8 @@
    "rt": 93,
    "mc": null,
    "tvmazeId": 60213,
-   "slug": "the-diplomat-s4"
+   "slug": "the-diplomat-s4",
+   "major": true
   },
   {
    "title": "Nobody Wants This (S3)",
@@ -366,7 +389,8 @@
    "rt": 87,
    "mc": null,
    "tvmazeId": 77060,
-   "slug": "nobody-wants-this-s3"
+   "slug": "nobody-wants-this-s3",
+   "major": true
   },
   {
    "title": "Lupin (Part 4)",
@@ -381,7 +405,8 @@
    "rt": 98,
    "mc": null,
    "tvmazeId": 50701,
-   "slug": "lupin-part-4"
+   "slug": "lupin-part-4",
+   "major": true
   },
   {
    "title": "Cyberpunk: Edgerunners 2",
@@ -396,7 +421,8 @@
    "rt": 89,
    "mc": null,
    "tvmazeId": 88337,
-   "slug": "cyberpunk-edgerunners-2"
+   "slug": "cyberpunk-edgerunners-2",
+   "major": true
   },
   {
    "title": "Crystal Lake",
@@ -411,7 +437,8 @@
    "rt": 77,
    "mc": null,
    "tvmazeId": 64960,
-   "slug": "crystal-lake"
+   "slug": "crystal-lake",
+   "major": true
   },
   {
    "title": "Tulsa King (S4)",
@@ -426,7 +453,8 @@
    "rt": 86,
    "mc": null,
    "tvmazeId": 59344,
-   "slug": "tulsa-king-s4"
+   "slug": "tulsa-king-s4",
+   "major": true
   },
   {
    "title": "Dexter: Resurrection (S2)",
@@ -441,7 +469,8 @@
    "rt": 92,
    "mc": null,
    "tvmazeId": 78665,
-   "slug": "dexter-resurrection-s2"
+   "slug": "dexter-resurrection-s2",
+   "major": true
   },
   {
    "title": "VisionQuest",
@@ -456,7 +485,8 @@
    "rt": 86,
    "mc": null,
    "tvmazeId": 64950,
-   "slug": "visionquest"
+   "slug": "visionquest",
+   "major": true
   },
   {
    "title": "The Terminal List (S2)",
@@ -471,7 +501,8 @@
    "rt": 57,
    "mc": null,
    "tvmazeId": 47856,
-   "slug": "the-terminal-list-s2"
+   "slug": "the-terminal-list-s2",
+   "major": true
   },
   {
    "title": "Nocturne",
@@ -486,13 +517,14 @@
    "rt": 83,
    "mc": null,
    "tvmazeId": 66811,
-   "slug": "nocturne"
+   "slug": "nocturne",
+   "major": true
   },
   {
    "title": "Love Village (S3)",
    "service": "Netflix",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Reality",
    "date": "2026-10-06",
    "dateLabel": "6 Oct 2026",
    "status": "Confirmed",
@@ -562,7 +594,7 @@
    "title": "Haunted Hotel (S2)",
    "service": "Netflix",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Animation, Comedy",
    "date": "2026-10-09",
    "dateLabel": "9 Oct 2026",
    "status": "Confirmed",
@@ -576,7 +608,7 @@
    "title": "Is It Cake? Halloween (S2)",
    "service": "Netflix",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Reality",
    "date": "2026-10-09",
    "dateLabel": "9 Oct 2026",
    "status": "Confirmed",
@@ -702,7 +734,7 @@
    "title": "The One About Matthew Perry",
    "service": "Netflix",
    "type": "New series",
-   "genre": "",
+   "genre": "Documentary",
    "date": "2026-10-27",
    "dateLabel": "27 Oct 2026",
    "status": "Confirmed",
@@ -856,7 +888,7 @@
    "title": "The Trials of Karen Read",
    "service": "Netflix",
    "type": "New series",
-   "genre": "",
+   "genre": "Documentary",
    "date": "2026-11-23",
    "dateLabel": "23 Nov 2026",
    "status": "Confirmed",
@@ -1010,7 +1042,7 @@
    "title": "Georgie & Mandy's First Marriage (S3)",
    "service": "HBO Max",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Comedy",
    "date": "2026-10-15",
    "dateLabel": "15 Oct 2026",
    "status": "Confirmed",
@@ -1024,7 +1056,7 @@
    "title": "Courage the Cowardly Dog (S2)",
    "service": "HBO Max",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Animation",
    "date": "2026-10-16",
    "dateLabel": "16 Oct 2026",
    "status": "Confirmed",
@@ -1038,7 +1070,7 @@
    "title": "Gold Rush (S17)",
    "service": "HBO Max",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Reality",
    "date": "2026-10-20",
    "dateLabel": "20 Oct 2026",
    "status": "Confirmed",
@@ -1094,7 +1126,7 @@
    "title": "90 Day: Hunt for Love (S2)",
    "service": "HBO Max",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Reality",
    "date": "2026-10-23",
    "dateLabel": "23 Oct 2026",
    "status": "Confirmed",
@@ -1108,7 +1140,7 @@
    "title": "ER: Caught on Camera",
    "service": "HBO Max",
    "type": "New series",
-   "genre": "",
+   "genre": "Documentary",
    "date": "2026-10-26",
    "dateLabel": "26 Oct 2026",
    "status": "Confirmed",
@@ -1136,7 +1168,7 @@
    "title": "Sister Wives (S21)",
    "service": "HBO Max",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Reality",
    "date": "2026-10-29",
    "dateLabel": "29 Oct 2026",
    "status": "Confirmed",
@@ -1178,7 +1210,7 @@
    "title": "Naked and Afraid: Shipwrecked",
    "service": "HBO Max",
    "type": "New series",
-   "genre": "",
+   "genre": "Reality",
    "date": "2026-11-06",
    "dateLabel": "6 Nov 2026",
    "status": "Confirmed",
@@ -1192,7 +1224,7 @@
    "title": "Harry Potter: Wizards of Baking (S3)",
    "service": "HBO Max",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Reality",
    "date": "2026-11-05",
    "dateLabel": "5 Nov 2026",
    "status": "Confirmed",
@@ -1304,7 +1336,7 @@
    "title": "Totally Spies! (S8)",
    "service": "HBO Max",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Animation",
    "date": "2026-11-20",
    "dateLabel": "20 Nov 2026",
    "status": "Confirmed",
@@ -1318,7 +1350,7 @@
    "title": "Signs of a Psychopath (S11)",
    "service": "HBO Max",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Documentary",
    "date": "2026-11-24",
    "dateLabel": "24 Nov 2026",
    "status": "Confirmed",
@@ -1360,7 +1392,7 @@
    "title": "Expedition X (S11)",
    "service": "HBO Max",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Documentary",
    "date": "2026-11-29",
    "dateLabel": "29 Nov 2026",
    "status": "Confirmed",
@@ -1374,7 +1406,7 @@
    "title": "Marshals (S2)",
    "service": "SkyShowtime",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Crime drama",
    "date": "2026-10-09",
    "dateLabel": "9 Oct 2026",
    "status": "Confirmed",
@@ -1402,7 +1434,7 @@
    "title": "Avatar: Seven Havens",
    "service": "SkyShowtime",
    "type": "New series",
-   "genre": "",
+   "genre": "Animation",
    "date": "2026-10-17",
    "dateLabel": "17 Oct 2026",
    "status": "Confirmed",
@@ -1416,7 +1448,7 @@
    "title": "Max & the Midknights (S3)",
    "service": "SkyShowtime",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Animation",
    "date": "2026-10-24",
    "dateLabel": "24 Oct 2026",
    "status": "Confirmed",
@@ -1444,7 +1476,7 @@
    "title": "Dancing with the Stars (S35)",
    "service": "Disney+",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Reality",
    "date": "2026-10-06",
    "dateLabel": "6 Oct 2026",
    "status": "Reported",
@@ -1486,7 +1518,7 @@
    "title": "Vampirina: Teenage Vampire (S2)",
    "service": "Disney+",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Animation",
    "date": "2026-10-07",
    "dateLabel": "7 Oct 2026",
    "status": "Reported",
@@ -1542,7 +1574,7 @@
    "title": "Marvel's Iron Man and his Awesome Friends",
    "service": "Disney+",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Animation",
    "date": "2026-10-28",
    "dateLabel": "28 Oct 2026",
    "status": "Reported",
@@ -1556,7 +1588,7 @@
    "title": "Marvel's Spidey and his Amazing Friends (S5)",
    "service": "Disney+",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Animation",
    "date": "2026-10-30",
    "dateLabel": "30 Oct 2026",
    "status": "Reported",
@@ -1626,7 +1658,7 @@
    "title": "Miraculous: Tales of Ladybug & Cat Noir (S7)",
    "service": "Disney+",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Animation",
    "date": "2026-11-21",
    "dateLabel": "21 Nov 2026",
    "status": "Reported",
@@ -1654,7 +1686,7 @@
    "title": "Last One Laughing: Halloween",
    "service": "Prime Video",
    "type": "New series",
-   "genre": "",
+   "genre": "Comedy",
    "date": "2026-10-23",
    "dateLabel": "23 Oct 2026",
    "status": "Reported",
@@ -1682,7 +1714,7 @@
    "title": "Last One Laughing Philippines (S2)",
    "service": "Prime Video",
    "type": "Returning season",
-   "genre": "",
+   "genre": "Comedy",
    "date": "2026-10-30",
    "dateLabel": "30 Oct 2026",
    "status": "Reported",
