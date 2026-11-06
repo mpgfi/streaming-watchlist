@@ -110,7 +110,7 @@
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 4. Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 5. Updated weekly. Ticking Watched is saved only in this browser.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -183,8 +183,10 @@ function renderList() {
         const n = daysUntil(r.date), isW = !!watched[r.title];
         const m = META[r.tvmazeId] || {};
         const full = m.desc || "", isOpen = openDesc.has(r.tvmazeId);
-        const descHtml = !full ? "" : (full.length <= 160 || isOpen)
+        const descHtml = !full ? "" : full.length <= 160
           ? esc(full)
+          : isOpen
+          ? esc(full) + ` <button class="more" data-l="${r.tvmazeId}" title="Show less">show less</button>`
           : esc(full.slice(0, 160).replace(/\s+\S*$/, "")) + ` <button class="more" data-d="${r.tvmazeId}" title="Show full description">…</button>`;
         const col = isCollapsed(r.title);
         const chev = `<button class="chev" data-c="${esc(r.title)}" aria-expanded="${!col}" aria-label="${col ? "Expand" : "Collapse"} ${esc(r.title)}" title="${col ? "Expand" : "Collapse"}">${CHEV}</button>`;
@@ -217,6 +219,7 @@ function renderList() {
     const flip = () => { const s = g.dataset.g; grpCollapsed[s] = !grpCollapsed[s]; if (!grpCollapsed[s]) delete grpCollapsed[s]; keep("grpCollapsed", grpCollapsed); renderList(); };
     g.onclick = flip; g.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); } };
   });
+  document.querySelectorAll('button[data-l]').forEach(b => b.onclick = () => { openDesc.delete(Number(b.dataset.l)); renderList(); });
   document.querySelectorAll('button[data-d]').forEach(b => b.onclick = () => { openDesc.add(Number(b.dataset.d)); renderList(); });
   document.querySelectorAll('input[data-t]').forEach(c => c.onchange = () => {
     if (c.checked) watched[c.dataset.t] = true; else delete watched[c.dataset.t];
