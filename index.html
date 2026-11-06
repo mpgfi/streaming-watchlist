@@ -125,7 +125,7 @@
   <footer>
     Datum markerade som Rapporterad kommer från internationella eller sekundära tablåer och kan skilja sig i Sverige.
     Betygen gäller hela serien: Rotten Tomatoes kritikerbetyg och Metacritic Metascore. Tomt betyg betyder att serien inte har släppts än eller inte finns listad.
-    Sidversion 23. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
+    Sidversion 24. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -212,7 +212,7 @@ function renderBar() {
   if (genreSel !== "All" && !present.includes(genreSel)) genreSel = "All";
   $("#viewbar").innerHTML = `<button class="chip viewbtn" id="view" aria-pressed="false">${compact ? "Fäll ut alla" : "Fäll ihop alla"}</button>` +
     `<label class="toggle"><input type="checkbox" id="hw" ${hideWatched ? "checked" : ""}> Dölj sedda</label>`;
-  $("#bar").innerHTML = ["All", ...services].map(s =>
+  $("#bar").innerHTML = '<span class="glabel">Tjänster</span>' + ["All", ...services].map(s =>
     `<button class="chip" data-s="${esc(s)}" aria-pressed="${s === service}">${s === "All" ? "Alla" : esc(s)}</button>`).join("");
   $("#genres").innerHTML = '<span class="glabel">Genre</span>' + ["All", ...present].map(g => `<button class="chip" data-gn="${esc(g)}" aria-pressed="${g === genreSel}">${g === "All" ? "Alla" : esc(GLABEL[g] || g)}</button>`).join("");
   document.querySelectorAll(".chip[data-gn]").forEach(b => b.onclick = () => { genreSel = b.dataset.gn; render(); });
