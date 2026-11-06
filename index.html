@@ -56,7 +56,8 @@
   .desc { grid-column: 3 / -1; font-size: 13px; color: var(--text); }
   .more { background: none; border: 0; color: var(--accent); font: inherit; cursor: pointer; padding: 0 2px; }
   .viewbtn { margin-right: 12px; border-color: var(--accent); }
-  .bar .search { margin-left: 0; }
+  .wrap { position: relative; }
+  .topsearch { position: absolute; top: 24px; right: max(16px, env(safe-area-inset-right, 0px)); margin: 0; width: 230px; min-width: 0; }
   .calbtn { background: transparent; color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; font: inherit; font-size: 12px; font-weight: bold; cursor: pointer; }
   .calbtn:hover { border-color: var(--accent); }
   .trbtn { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 6px; padding: 4px 10px; font: inherit; font-size: 12px; font-weight: bold; cursor: pointer; }
@@ -107,12 +108,13 @@
     .row.collapsed > .main { grid-column: 2; }
     .row.collapsed > .right { grid-column: 3; grid-row: 1; text-align: right; }
     .desc, .note, .src { grid-column: 1 / -1; }
-    .search { margin-left: 0; width: 100%; }
+    .topsearch { position: static; display: block; width: 100%; margin: 0 0 12px; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
+  <input class="search topsearch" id="q" type="search" placeholder="Sök titlar" aria-label="Sök titlar">
   <h1>Bevakningslista för streamingpremiärer</h1>
   <p class="sub">Stora serier på streamingtjänster i Sverige. Senast kontrollerad <span id="checked">–</span>. <span id="live"></span></p>
   <p class="sub" id="nextup"></p>
@@ -123,7 +125,7 @@
   <footer>
     Datum markerade som Rapporterad kommer från internationella eller sekundära tablåer och kan skilja sig i Sverige.
     Betygen gäller hela serien: Rotten Tomatoes kritikerbetyg och Metacritic Metascore. Tomt betyg betyder att serien inte har släppts än eller inte finns listad.
-    Sidversion 22. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
+    Sidversion 23. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -211,14 +213,12 @@ function renderBar() {
   $("#viewbar").innerHTML = `<button class="chip viewbtn" id="view" aria-pressed="false">${compact ? "Fäll ut alla" : "Fäll ihop alla"}</button>` +
     `<label class="toggle"><input type="checkbox" id="hw" ${hideWatched ? "checked" : ""}> Dölj sedda</label>`;
   $("#bar").innerHTML = ["All", ...services].map(s =>
-    `<button class="chip" data-s="${esc(s)}" aria-pressed="${s === service}">${s === "All" ? "Alla" : esc(s)}</button>`).join("") +
-    `<input class="search" id="q" type="search" placeholder="Sök titlar" value="${esc(query)}" aria-label="Sök titlar">`;
+    `<button class="chip" data-s="${esc(s)}" aria-pressed="${s === service}">${s === "All" ? "Alla" : esc(s)}</button>`).join("");
   $("#genres").innerHTML = '<span class="glabel">Genre</span>' + ["All", ...present].map(g => `<button class="chip" data-gn="${esc(g)}" aria-pressed="${g === genreSel}">${g === "All" ? "Alla" : esc(GLABEL[g] || g)}</button>`).join("");
   document.querySelectorAll(".chip[data-gn]").forEach(b => b.onclick = () => { genreSel = b.dataset.gn; render(); });
   $("#view").onclick = () => { compact = !compact; rowOv = {}; grpCollapsed = {}; try { localStorage.setItem("compact", compact ? "1" : "0"); } catch (e) {} keep("rowOv", rowOv); keep("grpCollapsed", grpCollapsed); render(); };
   document.querySelectorAll(".chip[data-s]").forEach(b => b.onclick = () => { service = b.dataset.s; render(); });
   $("#hw").onchange = (e) => { hideWatched = e.target.checked; renderList(); };
-  $("#q").oninput = (e) => { query = e.target.value.toLowerCase(); renderList(); };
 }
 
 function renderList() {
@@ -337,6 +337,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#tr"
   const end = () => { drag = false; };
   bar.addEventListener("pointerup", end); bar.addEventListener("pointercancel", end);
 })();
+$("#q").oninput = (e) => { query = e.target.value.toLowerCase(); renderList(); };
 render();
 $("#nextup").textContent = nextUpdateText();
 
