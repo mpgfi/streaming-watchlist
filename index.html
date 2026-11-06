@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Streaming Premiere Watchlist</title>
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #1b1f27; --muted: #5d6675; --line: #e2e5ea;
+    --accent: #1f3864; --accent-ink: #ffffff;
+    --ok-bg: #e2efda; --ok-ink: #2d5a1b; --warn-bg: #fff2cc; --warn-ink: #7a5b00; --info-bg: #e7edf8; --info-ink: #1f3864;
+    --radius: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151b; --card: #1b1f27; --text: #e8ebf0; --muted: #9aa3b2; --line: #2b313c;
+      --accent: #8fb0ee; --accent-ink: #0d1626;
+      --ok-bg: #1f3a1a; --ok-ink: #b7e3a3; --warn-bg: #3d3210; --warn-ink: #f0d27a; --info-bg: #1d2a44; --info-ink: #b9cdf5;
+    }
+  }
+  :root[data-theme="dark"] {
+      --bg: #12151b; --card: #1b1f27; --text: #e8ebf0; --muted: #9aa3b2; --line: #2b313c;
+      --accent: #8fb0ee; --accent-ink: #0d1626;
+      --ok-bg: #1f3a1a; --ok-ink: #b7e3a3; --warn-bg: #3d3210; --warn-ink: #f0d27a; --info-bg: #1d2a44; --info-ink: #b9cdf5;
+    }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 Arial, Helvetica, sans-serif; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 24px max(16px, env(safe-area-inset-left, 0px)) 56px max(16px, env(safe-area-inset-right, 0px)); }
+  .row > div { min-width: 0; }
+  .skel { height: 74px; border-radius: var(--radius); background: var(--line); opacity: .5; margin-bottom: 10px; }
+  h1 { margin: 0 0 4px; font-size: 26px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 20px; }
+  .chip { border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 999px; padding: 6px 12px; font: inherit; cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .search { margin-left: auto; border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 8px; padding: 7px 10px; font: inherit; min-width: 190px; }
+  .toggle { color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  h2 { font-size: 17px; margin: 28px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--accent); }
+  h2 span { color: var(--muted); font-weight: normal; font-size: 13px; margin-left: 6px; }
+  .grid { display: grid; gap: 10px; }
+  .row { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px;
+         display: grid; grid-template-columns: 1fr auto; gap: 6px 14px; }
+  .row.watched { opacity: .55; }
+  .row.watched .title { text-decoration: line-through; }
+  .title { font-weight: bold; font-size: 16px; }
+  .meta { color: var(--muted); font-size: 13px; }
+  .right { text-align: right; min-width: 150px; }
+  .date { font-weight: bold; }
+  .days { color: var(--muted); font-size: 13px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+  .b { border-radius: 6px; padding: 2px 8px; font-size: 12px; font-weight: bold; }
+  .b.ok { background: var(--ok-bg); color: var(--ok-ink); }
+  .b.warn { background: var(--warn-bg); color: var(--warn-ink); }
+  .b.info { background: var(--info-bg); color: var(--info-ink); }
+  .note { grid-column: 1 / -1; font-size: 13px; }
+  .src { grid-column: 1 / -1; font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .src label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .empty { color: var(--muted); padding: 24px 0; }
+  footer { margin-top: 36px; color: var(--muted); font-size: 12px; }
+  @media (max-width: 560px) {
+    .row { grid-template-columns: 1fr; }
+    .right { text-align: left; }
+    .search { margin-left: 0; width: 100%; }
+  }
+</style>
+
+<div class="wrap">
+  <h1>Streaming premiere watchlist</h1>
+  <p class="sub">Major series on services in Sweden. Last checked <span id="checked"></span>. <span id="live"></span></p>
+
+  <div class="bar" id="bar"></div>
+
+  <div id="out"></div>
+
+  <footer>
+    Dates marked Reported come from international or secondary schedules and may differ in Sweden.
+    Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
+    Ticking Watched is saved only in this browser.
+  </footer>
+</div>
+
+</head>
+<body>
+<div class="wrap">
+  <h1>Streaming premiere watchlist</h1>
+  <p class="sub">Major series on services in Sweden. Last checked <span id="checked">–</span>. <span id="live"></span></p>
+  <div class="bar" id="bar"></div>
+  <div id="out"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
+  <footer>
+    Dates marked Reported come from international or secondary schedules and may differ in Sweden.
+    Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
+    Updated weekly. Ticking Watched is saved only in this browser.
+  </footer>
+</div>
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let DATA = [], loaded = false, service = "All", query = "", hideWatched = false;
+
+function loadWatched() { try { return JSON.parse(localStorage.getItem("watched") || "{}"); } catch (e) { return {}; } }
+function saveWatched(w) { try { localStorage.setItem("watched", JSON.stringify(w)); } catch (e) {} }
+let watched = loadWatched();
+
+function daysUntil(iso) {
+  if (!iso) return null;
+  const now = new Date(); now.setHours(0,0,0,0);
+  return Math.round((new Date(iso + "T00:00:00") - now) / 86400000);
+}
+function daysText(n) {
+  if (n === null) return "";
+  if (n < 0) return "Out now";
+  if (n === 0) return "Today";
+  if (n === 1) return "Tomorrow";
+  return "In " + n + " days";
+}
+function statusClass(s) { s = s || ""; return s.startsWith("Confirmed") ? "ok" : (s === "TBA" || s === "Date TBC") ? "warn" : "info"; }
+
+function renderBar() {
+  const services = [...new Set(DATA.map(r => r.service))].sort();
+  if (service !== "All" && !services.includes(service)) service = "All";
+  $("#bar").innerHTML = ["All", ...services].map(s =>
+    `<button class="chip" data-s="${esc(s)}" aria-pressed="${s === service}">${esc(s)}</button>`).join("") +
+    `<label class="toggle"><input type="checkbox" id="hw" ${hideWatched ? "checked" : ""}> Hide watched</label>` +
+    `<input class="search" id="q" type="search" placeholder="Search titles" value="${esc(query)}" aria-label="Search titles">`;
+  document.querySelectorAll(".chip").forEach(b => b.onclick = () => { service = b.dataset.s; render(); });
+  $("#hw").onchange = (e) => { hideWatched = e.target.checked; renderList(); };
+  $("#q").oninput = (e) => { query = e.target.value.toLowerCase(); renderList(); };
+}
+
+function renderList() {
+  if (!loaded) return;
+  if (!DATA.length) { $("#out").innerHTML = '<p class="empty">The watchlist is empty. It fills in at the next weekly update.</p>'; return; }
+  const rows = DATA.filter(r =>
+    (service === "All" || r.service === service) &&
+    (!query || r.title.toLowerCase().includes(query) || (r.genre || "").toLowerCase().includes(query)) &&
+    !(hideWatched && watched[r.title]));
+  if (!rows.length) { $("#out").innerHTML = '<p class="empty">Nothing matches.</p>'; return; }
+  const by = {};
+  rows.forEach(r => (by[r.service] = by[r.service] || []).push(r));
+  $("#out").innerHTML = Object.keys(by).sort().map(s => {
+    const list = by[s].slice().sort((a, b) => {
+      const da = a.date || "9999", db = b.date || "9999";
+      return da < db ? -1 : da > db ? 1 : a.title.localeCompare(b.title);
+    });
+    return `<h2>${esc(s)}<span>${list.length} title${list.length === 1 ? "" : "s"}</span></h2><div class="grid">` +
+      list.map(r => {
+        const n = daysUntil(r.date), isW = !!watched[r.title];
+        return `<div class="row${isW ? " watched" : ""}">
+          <div><div class="title">${esc(r.title)}</div>
+            <div class="meta">${esc(r.type)} · ${esc(r.genre)}</div>
+            <div class="badges">
+              <span class="b ${statusClass(r.status)}">${esc(r.status)}</span>
+              ${r.rt != null ? `<span class="b info">RT ${esc(r.rt)}%</span>` : ""}
+              ${r.mc != null ? `<span class="b info">MC ${esc(r.mc)}</span>` : ""}
+            </div></div>
+          <div class="right"><div class="date">${esc(r.dateLabel)}</div><div class="days">${daysText(n)}</div></div>
+          ${r.notes ? `<div class="note">${esc(r.notes)}</div>` : ""}
+          <div class="src"><span>Source: ${esc(r.source)}</span>
+            <label><input type="checkbox" data-t="${esc(r.title)}" ${isW ? "checked" : ""}> Watched</label></div>
+        </div>`;
+      }).join("") + "</div>";
+  }).join("");
+  document.querySelectorAll('input[data-t]').forEach(c => c.onchange = () => {
+    if (c.checked) watched[c.dataset.t] = true; else delete watched[c.dataset.t];
+    saveWatched(watched); renderList();
+  });
+}
+function render() { renderBar(); renderList(); }
+render();
+
+const DATA_URL = "https://raw.githubusercontent.com/mpgfi/streaming-watchlist/main/watchlist.json";
+(async () => {
+  const timer = setTimeout(() => { if (!loaded) $("#live").textContent = "Still trying to reach the data…"; }, 10000);
+  try {
+    const r = await fetch(DATA_URL, { cache: "no-cache" });
+    if (!r.ok) throw new Error(r.status);
+    const j = await r.json();
+    DATA = j.shows || [];
+    if (j.lastChecked) $("#checked").textContent = j.lastChecked;
+    $("#live").textContent = "";
+  } catch (e) {
+    $("#out").innerHTML = '<p class="empty">Could not load the watchlist data right now. Try again later.</p>';
+  }
+  clearTimeout(timer); loaded = true;
+  if (DATA.length) render();
+})();
+</script>
+</body>
+</html>
