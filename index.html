@@ -57,6 +57,8 @@
   .more { background: none; border: 0; color: var(--accent); font: inherit; cursor: pointer; padding: 0 2px; }
   .viewbtn { margin-right: 12px; border-color: var(--accent); }
   .bar .search { margin-left: 0; }
+  .calbtn { background: transparent; color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; font: inherit; font-size: 12px; font-weight: bold; cursor: pointer; }
+  .calbtn:hover { border-color: var(--accent); }
   .trbtn { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 6px; padding: 4px 10px; font: inherit; font-size: 12px; font-weight: bold; cursor: pointer; }
   .src .acts { display: flex; align-items: center; gap: 14px; }
   #tr { position: fixed; right: 20px; bottom: 20px; width: 480px; min-width: 280px; max-width: calc(100vw - 16px); z-index: 50; background: #111; color: #fff;
@@ -117,7 +119,7 @@
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 13. Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 14. Updated weekly. Ticking Watched is saved only in this browser.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -224,11 +226,12 @@ function renderList() {
           ${descHtml ? `<div class="desc">${descHtml}</div>` : ""}
           ${r.notes ? `<div class="note">${esc(r.notes)}</div>` : ""}
           <div class="src"><span>Source: ${esc(r.source)}</span>
-            <span class="acts">${r.trailer ? `<button class="trbtn" data-tr="${esc(r.trailer)}" data-tt="${esc(r.title)}">▶ Watch trailer</button>` : ""}
+            <span class="acts">${(r.date && n !== null && n >= 0) ? `<button class="calbtn" data-cal="${esc(r.title)}" title="Download a calendar event with a reminder (opens in Apple Calendar)">📅 Add to calendar</button>` : ""}${r.trailer ? `<button class="trbtn" data-tr="${esc(r.trailer)}" data-tt="${esc(r.title)}">▶ Watch trailer</button>` : ""}
             <label><input type="checkbox" data-t="${esc(r.title)}" ${isW ? "checked" : ""}> Watched</label></span></div>
         </div>`;
       }).join("") + (gc ? "" : "</div>");
   }).join("");
+  document.querySelectorAll("button[data-cal]").forEach(b => b.onclick = () => { const r = DATA.find(x => x.title === b.dataset.cal); if (r) downloadIcs(r); });
   document.querySelectorAll("button[data-tr]").forEach(b => b.onclick = () => openTrailer(b.dataset.tr, b.dataset.tt));
   document.querySelectorAll("button[data-c]").forEach(b => b.onclick = () => {
     const t = b.dataset.c; rowOv[t] = !isCollapsed(t); keep("rowOv", rowOv); renderList();
@@ -312,6 +315,31 @@ function linkOf(r) {
   return f(encodeURIComponent(r.title.replace(/\s*\([^)]*\)\s*$/, "")));
 }
 const aTitle = (r) => { const u = linkOf(r); return u ? `<a class="tl" href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="Open on ${esc(r.service)}">${esc(r.title)}</a>` : esc(r.title); };
+
+// Calendar reminder: builds a standard .ics file (all-day event on the premiere date, alert at 09:00 that day)
+// which Apple Calendar (and Google/Outlook) opens as a new event.
+function icsEsc(t) { return String(t || "").replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n"); }
+function icsFold(line) { const out = []; while (line.length > 74) { out.push(line.slice(0, 74)); line = " " + line.slice(74); } out.push(line); return out.join("\r\n"); }
+function downloadIcs(r) {
+  const d0 = r.date.replace(/-/g, "");
+  const nx = new Date(r.date + "T00:00:00"); nx.setDate(nx.getDate() + 1);
+  const d1 = nx.getFullYear() + String(nx.getMonth() + 1).padStart(2, "0") + String(nx.getDate()).padStart(2, "0");
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
+  const url = linkOf(r);
+  const desc = [r.type, r.genre, "On " + r.service + " in Sweden", r.dateLabel, url].filter(Boolean).join(" \u2022 ");
+  const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Streaming watchlist//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
+    "BEGIN:VEVENT", "UID:" + (r.slug || r.title.replace(/\W+/g, "-")) + "-" + d0 + "@streaming-watchlist", "DTSTAMP:" + stamp,
+    "DTSTART;VALUE=DATE:" + d0, "DTEND;VALUE=DATE:" + d1,
+    "SUMMARY:" + icsEsc("Premiere: " + r.title + " (" + r.service + ")"), "DESCRIPTION:" + icsEsc(desc)];
+  if (url) lines.push("URL:" + url);
+  lines.push("TRANSP:TRANSPARENT", "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + icsEsc(r.title + " premieres today on " + r.service),
+    "TRIGGER;RELATED=START:PT9H", "END:VALARM", "END:VEVENT", "END:VCALENDAR");
+  const blob = new Blob([lines.map(icsFold).join("\r\n") + "\r\n"], { type: "text/calendar;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = (r.slug || "premiere") + ".ics";
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
 const keyOf = (r) => r.tvmazeId ? String(r.tvmazeId) : "t:" + r.title;
 const norm = (s) => String(s).toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "");
 const NET = { "Netflix": /netflix/i, "HBO Max": /hbo|max|discovery|tlc|investigation|hgtv|food|animal planet|travel|cnn|tnt|trutv|cartoon|adult swim|warner|oprah|own|lifetime|a&e/i,
