@@ -118,11 +118,12 @@
   <p class="sub" id="nextup"></p>
   <div class="bar" id="bar"></div>
   <div class="bar" id="genres"></div>
+  <div class="bar" id="viewbar" style="margin:-6px 0 14px"></div>
   <div id="out"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
   <footer>
     Datum markerade som Rapporterad kommer från internationella eller sekundära tablåer och kan skilja sig i Sverige.
     Betygen gäller hela serien: Rotten Tomatoes kritikerbetyg och Metacritic Metascore. Tomt betyg betyder att serien inte har släppts än eller inte finns listad.
-    Sidversion 20. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
+    Sidversion 21. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -207,8 +208,8 @@ function renderBar() {
   if (service !== "All" && !services.includes(service)) service = "All";
   const present = GENRES.filter(([n, re]) => DATA.some(r => re.test(genreText(r)))).map(g => g[0]);
   if (genreSel !== "All" && !present.includes(genreSel)) genreSel = "All";
-  $("#bar").innerHTML = `<button class="chip viewbtn" id="view" aria-pressed="false">${compact ? "Fäll ut alla" : "Fäll ihop alla"}</button>` +
-    ["All", ...services].map(s =>
+  $("#viewbar").innerHTML = `<button class="chip viewbtn" id="view" aria-pressed="false">${compact ? "Fäll ut alla" : "Fäll ihop alla"}</button>`;
+  $("#bar").innerHTML = ["All", ...services].map(s =>
     `<button class="chip" data-s="${esc(s)}" aria-pressed="${s === service}">${s === "All" ? "Alla" : esc(s)}</button>`).join("") +
     `<label class="toggle"><input type="checkbox" id="hw" ${hideWatched ? "checked" : ""}> Dölj sedda</label>` +
     `<input class="search" id="q" type="search" placeholder="Sök titlar" value="${esc(query)}" aria-label="Sök titlar">`;
