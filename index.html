@@ -76,6 +76,9 @@
   .row.watched { opacity: .55; }
   .row.watched .title { text-decoration: line-through; }
   .title { font-weight: bold; font-size: 16px; }
+  a.tl { color: inherit; text-decoration: none; }
+  a.tl:hover, a.tl:focus-visible { text-decoration: underline; }
+  a.artlink { display: block; width: 100%; height: 100%; }
   .meta { color: var(--muted); font-size: 13px; }
   .right { text-align: right; min-width: 150px; }
   .date { font-weight: bold; }
@@ -114,7 +117,7 @@
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 10. Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 11. Updated weekly. Ticking Watched is saved only in this browser.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -209,11 +212,11 @@ function renderList() {
         const col = isCollapsed(r.title);
         const chev = `<button class="chev" data-c="${esc(r.title)}" aria-expanded="${!col}" aria-label="${col ? "Expand" : "Collapse"} ${esc(r.title)}" title="${col ? "Expand" : "Collapse"}">${CHEV}</button>`;
         if (col) return `<div class="row collapsed${isW ? " watched" : ""}">${chev}
-          <div class="main"><div class="title">${esc(r.title)}</div></div>
+          <div class="main"><div class="title">${aTitle(r)}</div></div>
           <div class="right"><span class="date">${esc(r.dateLabel)}</span></div></div>`;
         return `<div class="row${isW ? " watched" : ""}">${chev}
-          <div class="art">${m.img ? `<img src="${esc(m.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</div>
-          <div class="main"><div class="title">${esc(r.title)}</div>
+          <div class="art">${linkOf(r) ? `<a class="artlink" href="${esc(linkOf(r))}" target="_blank" rel="noopener noreferrer" aria-label="Open ${esc(r.title)} on ${esc(r.service)}">` : ""}${m.img ? `<img src="${esc(m.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}${linkOf(r) ? "</a>" : ""}</div>
+          <div class="main"><div class="title">${aTitle(r)}</div>
             <div class="meta">${esc([r.type, r.genre || m.genres, m.eps ? m.eps + (m.eps === 1 ? " episode" : " episodes") : "", m.avg ? "Avg runtime " + m.avg + " min" : ""].filter(Boolean).join(" • "))}</div>
             <div class="badges">
               <span class="b ${statusClass(r.status)}">${esc(r.status)}</span>
@@ -296,6 +299,20 @@ const DATA_URL = "https://raw.githubusercontent.com/mpgfi/streaming-watchlist/ma
 // Artwork and descriptions come from the free TVmaze API, looked up in the visitor's browser
 // and cached for a week so each series is only fetched once per browser.
 const strip = (html) => { const d = document.createElement("div"); d.innerHTML = html || ""; return (d.textContent || "").replace(/\s+/g, " ").trim(); };
+const SEARCH = {
+  "Netflix": q => "https://www.netflix.com/search?q=" + q,
+  "HBO Max": q => "https://play.hbomax.com/search/result?q=" + q,
+  "Disney+": q => "https://www.disneyplus.com/sv-se/search/" + q,
+  "Prime Video": q => "https://www.primevideo.com/search/?phrase=" + q,
+  "Apple TV": q => "https://tv.apple.com/se/search?term=" + q,
+  "SkyShowtime": q => "https://www.google.com/search?q=" + q + "+site%3Askyshowtime.com"
+};
+function linkOf(r) {
+  if (r.url) return r.url;
+  const f = SEARCH[r.service]; if (!f) return "";
+  return f(encodeURIComponent(r.title.replace(/\s*\([^)]*\)\s*$/, "")));
+}
+const aTitle = (r) => { const u = linkOf(r); return u ? `<a class="tl" href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="Open on ${esc(r.service)}">${esc(r.title)}</a>` : esc(r.title); };
 const keyOf = (r) => r.tvmazeId ? String(r.tvmazeId) : "t:" + r.title;
 const norm = (s) => String(s).toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "");
 const NET = { "Netflix": /netflix/i, "HBO Max": /hbo|max|discovery|tlc|investigation|hgtv|food|animal planet|travel|cnn|tnt|trutv|cartoon|adult swim|warner|oprah|own|lifetime|a&e/i,
