@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="sv">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Streaming Premiere Watchlist</title>
+<title>Bevakningslista för streamingpremiärer</title>
 <style>
   :root {
     --bg: #f6f7f9; --card: #ffffff; --text: #1b1f27; --muted: #5d6675; --line: #e2e5ea;
@@ -113,20 +113,20 @@
 </head>
 <body>
 <div class="wrap">
-  <h1>Streaming premiere watchlist</h1>
-  <p class="sub">Major series on services in Sweden. Last checked <span id="checked">–</span>. <span id="live"></span></p>
+  <h1>Bevakningslista för streamingpremiärer</h1>
+  <p class="sub">Stora serier på streamingtjänster i Sverige. Senast kontrollerad <span id="checked">–</span>. <span id="live"></span></p>
   <p class="sub" id="nextup"></p>
   <div class="bar" id="bar"></div>
   <div class="bar" id="genres"></div>
   <div id="out"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
   <footer>
-    Dates marked Reported come from international or secondary schedules and may differ in Sweden.
-    Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 19. Updated weekly, on Fridays. Ticking Watched is saved only in this browser.
+    Datum markerade som Rapporterad kommer från internationella eller sekundära tablåer och kan skilja sig i Sverige.
+    Betygen gäller hela serien: Rotten Tomatoes kritikerbetyg och Metacritic Metascore. Tomt betyg betyder att serien inte har släppts än eller inte finns listad.
+    Sidversion 20. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
-  <div class="bar2" id="trbar"><span class="ttl" id="trtitle"></span><a id="trlink" target="_blank" rel="noopener">Open on YouTube</a><button id="trx" aria-label="Close trailer">×</button></div>
+  <div class="bar2" id="trbar"><span class="ttl" id="trtitle"></span><a id="trlink" target="_blank" rel="noopener">Öppna på YouTube</a><button id="trx" aria-label="Stäng trailern">×</button></div>
   <div class="vid" id="trvid"></div>
 </div>
 <script>
@@ -134,9 +134,10 @@ const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let DATA = [], loaded = false, service = "All", query = "", hideWatched = false;
 let genreSel = "All";
-const GENRES = [["Drama", /drama/i], ["Comedy", /comed|sitcom/i], ["Sci-fi", /sci-?fi|science/i], ["Fantasy", /fantasy/i], ["Thriller", /thriller|mystery|spy/i],
-  ["Crime", /crime/i], ["Horror", /horror/i], ["Action", /action|adventure/i], ["Documentary", /documentar|true crime|nature|history/i],
-  ["Reality", /reality|game show|talk|dating|competition/i], ["Animation", /animat|anime|cartoon|children/i]];
+const GENRES = [["Drama", /drama/i, "Drama"], ["Comedy", /comed|sitcom/i, "Komedi"], ["Sci-fi", /sci-?fi|science/i, "Sci-fi"], ["Fantasy", /fantasy/i, "Fantasy"], ["Thriller", /thriller|mystery|spy/i, "Thriller"],
+  ["Crime", /crime/i, "Kriminal"], ["Horror", /horror/i, "Skräck"], ["Action", /action|adventure/i, "Action"], ["Documentary", /documentar|true crime|nature|history/i, "Dokumentär"],
+  ["Reality", /reality|game show|talk|dating|competition/i, "Reality"], ["Animation", /animat|anime|cartoon|children/i, "Animation"]];
+const GLABEL = Object.fromEntries(GENRES.map(g => [g[0], g[2]]));
 const genreText = (r) => [r.genre, (META[keyOf(r)] || {}).genres].filter(Boolean).join(", ");
 let compact = false; try { compact = localStorage.getItem("compact") === "1"; } catch (e) {}
 const META = {};            // key (tvmazeId or "t:title") -> {img, desc, eps, avg, genres}
@@ -171,10 +172,33 @@ function daysUntil(iso) {
 }
 function daysText(n) {
   if (n === null) return "";
-  if (n < 0) return "Out now";
-  if (n === 0) return "Today";
-  if (n === 1) return "Tomorrow";
-  return "In " + n + " days";
+  if (n < 0) return "Ute nu";
+  if (n === 0) return "Idag";
+  if (n === 1) return "Imorgon";
+  return "Om " + n + " dagar";
+}
+// ---- Swedish display text. The data file keeps stable English values for type/status/genre (used for matching);
+// the page translates them for display only. ----
+const T_TYPE = { "New series": "Ny serie", "Returning season": "Ny säsong", "Top rated": "Topprankad" };
+const T_STATUS = { "Confirmed": "Bekräftad", "Reported": "Rapporterad", "TBA": "Ej klart", "Date TBC": "Datum ej klart", "Streaming": "Streamas" };
+const tType = (t) => T_TYPE[t] || t || "";
+const tStatus = (t) => T_STATUS[t] || t || "";
+const MONTHS_SV = { Jan: "jan", Feb: "feb", Mar: "mars", Apr: "apr", May: "maj", Jun: "juni", Jul: "juli", Aug: "aug", Sep: "sep", Oct: "okt", Nov: "nov", Dec: "dec" };
+function tDate(t) {
+  return String(t || "").replace(/^Streaming now$/i, "Streamas nu").replace(/\(date TBA\)/i, "(datum ej klart)").replace(/\(date TBC\)/i, "(datum ej klart)")
+    .replace(/\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\b/g, (m) => MONTHS_SV[m]);
+}
+const GENRE_SV = [[/animated fantasy/gi, "animerad fantasy"], [/adult animation/gi, "vuxenanimation"], [/historical drama/gi, "historiskt drama"], [/period drama/gi, "kostymdrama"],
+  [/sports drama/gi, "sportdrama"], [/medical drama/gi, "sjukhusdrama"], [/crime drama/gi, "kriminaldrama"], [/comedy drama/gi, "komedidrama"], [/dark comedy/gi, "mörk komedi"],
+  [/christmas calendar/gi, "julkalender"], [/spy thriller/gi, "spionthriller"], [/sci-fi thriller/gi, "sci-fi-thriller"], [/sci-fi drama/gi, "sci-fi-drama"],
+  [/science-fiction/gi, "sci-fi"], [/superhero satire/gi, "superhjältesatir"], [/superhero/gi, "superhjälte"], [/heist/gi, "kupp"], [/mystery/gi, "mysterium"],
+  [/crime/gi, "kriminal"], [/comedy/gi, "komedi"], [/drama/gi, "drama"], [/action/gi, "action"], [/adventure/gi, "äventyr"], [/thriller/gi, "thriller"], [/horror/gi, "skräck"],
+  [/romance/gi, "romantik"], [/history/gi, "historia"], [/\bwar\b/gi, "krig"], [/western/gi, "western"], [/family/gi, "familj"], [/music/gi, "musik"], [/medical/gi, "sjukhus"],
+  [/sports/gi, "sport"], [/anime/gi, "anime"], [/legal/gi, "juridik"], [/espionage/gi, "spionage"], [/supernatural/gi, "övernaturligt"], [/documentary/gi, "dokumentär"],
+  [/reality/gi, "reality"], [/animation/gi, "animation"], [/fantasy/gi, "fantasy"]];
+function tGenre(t) {
+  let o = String(t || ""); GENRE_SV.forEach(([re, sv]) => { o = o.replace(re, sv); });
+  return o ? o.charAt(0).toUpperCase() + o.slice(1) : "";
 }
 function statusClass(s) { s = s || ""; return s.startsWith("Confirmed") ? "ok" : (s === "TBA" || s === "Date TBC") ? "warn" : "info"; }
 
@@ -183,12 +207,12 @@ function renderBar() {
   if (service !== "All" && !services.includes(service)) service = "All";
   const present = GENRES.filter(([n, re]) => DATA.some(r => re.test(genreText(r)))).map(g => g[0]);
   if (genreSel !== "All" && !present.includes(genreSel)) genreSel = "All";
-  $("#bar").innerHTML = `<button class="chip viewbtn" id="view" aria-pressed="false">${compact ? "Expand all" : "Compress all"}</button>` +
+  $("#bar").innerHTML = `<button class="chip viewbtn" id="view" aria-pressed="false">${compact ? "Fäll ut alla" : "Fäll ihop alla"}</button>` +
     ["All", ...services].map(s =>
-    `<button class="chip" data-s="${esc(s)}" aria-pressed="${s === service}">${esc(s)}</button>`).join("") +
-    `<label class="toggle"><input type="checkbox" id="hw" ${hideWatched ? "checked" : ""}> Hide watched</label>` +
-    `<input class="search" id="q" type="search" placeholder="Search titles" value="${esc(query)}" aria-label="Search titles">`;
-  $("#genres").innerHTML = '<span class="glabel">Genre</span>' + ["All", ...present].map(g => `<button class="chip" data-gn="${esc(g)}" aria-pressed="${g === genreSel}">${esc(g)}</button>`).join("");
+    `<button class="chip" data-s="${esc(s)}" aria-pressed="${s === service}">${s === "All" ? "Alla" : esc(s)}</button>`).join("") +
+    `<label class="toggle"><input type="checkbox" id="hw" ${hideWatched ? "checked" : ""}> Dölj sedda</label>` +
+    `<input class="search" id="q" type="search" placeholder="Sök titlar" value="${esc(query)}" aria-label="Sök titlar">`;
+  $("#genres").innerHTML = '<span class="glabel">Genre</span>' + ["All", ...present].map(g => `<button class="chip" data-gn="${esc(g)}" aria-pressed="${g === genreSel}">${g === "All" ? "Alla" : esc(GLABEL[g] || g)}</button>`).join("");
   document.querySelectorAll(".chip[data-gn]").forEach(b => b.onclick = () => { genreSel = b.dataset.gn; render(); });
   $("#view").onclick = () => { compact = !compact; rowOv = {}; grpCollapsed = {}; try { localStorage.setItem("compact", compact ? "1" : "0"); } catch (e) {} keep("rowOv", rowOv); keep("grpCollapsed", grpCollapsed); render(); };
   document.querySelectorAll(".chip[data-s]").forEach(b => b.onclick = () => { service = b.dataset.s; render(); });
@@ -198,13 +222,13 @@ function renderBar() {
 
 function renderList() {
   if (!loaded) return;
-  if (!DATA.length) { $("#out").innerHTML = '<p class="empty">The watchlist is empty. It fills in at the next weekly update.</p>'; return; }
+  if (!DATA.length) { $("#out").innerHTML = '<p class="empty">Bevakningslistan är tom. Den fylls på vid nästa veckouppdatering.</p>'; return; }
   const rows = DATA.filter(r =>
     (service === "All" || r.service === service) &&
     (genreSel === "All" || (GENRES.find(g => g[0] === genreSel)[1]).test(genreText(r))) &&
     (!query || r.title.toLowerCase().includes(query) || (r.genre || "").toLowerCase().includes(query)) &&
     !(hideWatched && isWatched(r)));
-  if (!rows.length) { $("#out").innerHTML = '<p class="empty">Nothing matches.</p>'; return; }
+  if (!rows.length) { $("#out").innerHTML = '<p class="empty">Inget matchar.</p>'; return; }
   const by = {};
   rows.forEach(r => (by[r.service] = by[r.service] || []).push(r));
   $("#out").innerHTML = Object.keys(by).sort().map(s => {
@@ -213,7 +237,7 @@ function renderList() {
       return da < db ? -1 : da > db ? 1 : a.title.localeCompare(b.title);
     });
     const gc = !!grpCollapsed[s];
-    return `<h2 class="grp${gc ? " collapsed" : ""}" data-g="${esc(s)}" role="button" tabindex="0" aria-expanded="${!gc}"><button class="chev" tabindex="-1" aria-hidden="true">${CHEV}</button>${esc(s)}<span>${list.length} title${list.length === 1 ? "" : "s"}</span></h2>` +
+    return `<h2 class="grp${gc ? " collapsed" : ""}" data-g="${esc(s)}" role="button" tabindex="0" aria-expanded="${!gc}"><button class="chev" tabindex="-1" aria-hidden="true">${CHEV}</button>${esc(s)}<span>${list.length} ${list.length === 1 ? "titel" : "titlar"}</span></h2>` +
       (gc ? "" : '<div class="grid">') +
       (gc ? [] : list).map(r => {
         const n = daysUntil(r.date), isW = isWatched(r);
@@ -222,28 +246,28 @@ function renderList() {
         const descHtml = !full ? "" : full.length <= 160
           ? esc(full)
           : isOpen
-          ? esc(full) + ` <button class="more" data-l="${esc(k)}" title="Show less">show less</button>`
-          : esc(full.slice(0, 160).replace(/\s+\S*$/, "")) + ` <button class="more" data-d="${esc(k)}" title="Show full description">…</button>`;
+          ? esc(full) + ` <button class="more" data-l="${esc(k)}" title="Visa mindre">visa mindre</button>`
+          : esc(full.slice(0, 160).replace(/\s+\S*$/, "")) + ` <button class="more" data-d="${esc(k)}" title="Visa hela beskrivningen">…</button>`;
         const col = isCollapsed(r.title);
-        const chev = `<button class="chev" data-c="${esc(r.title)}" aria-expanded="${!col}" aria-label="${col ? "Expand" : "Collapse"} ${esc(r.title)}" title="${col ? "Expand" : "Collapse"}">${CHEV}</button>`;
+        const chev = `<button class="chev" data-c="${esc(r.title)}" aria-expanded="${!col}" aria-label="${col ? "Fäll ut" : "Fäll ihop"} ${esc(r.title)}" title="${col ? "Fäll ut" : "Fäll ihop"}">${CHEV}</button>`;
         if (col) return `<div class="row collapsed${isW ? " watched" : ""}">${chev}
           <div class="main"><div class="title">${aTitle(r)}</div></div>
-          <div class="right"><span class="date">${esc(r.dateLabel)}</span></div></div>`;
+          <div class="right"><span class="date">${esc(tDate(r.dateLabel))}</span></div></div>`;
         return `<div class="row${isW ? " watched" : ""}">${chev}
-          <div class="art">${linkOf(r) ? `<a class="artlink" href="${esc(linkOf(r))}" target="_blank" rel="noopener noreferrer" aria-label="Open ${esc(r.title)} on ${esc(r.service)}">` : ""}${m.img ? `<img src="${esc(m.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}${linkOf(r) ? "</a>" : ""}</div>
+          <div class="art">${linkOf(r) ? `<a class="artlink" href="${esc(linkOf(r))}" target="_blank" rel="noopener noreferrer" aria-label="Öppna ${esc(r.title)} på ${esc(r.service)}">` : ""}${m.img ? `<img src="${esc(m.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}${linkOf(r) ? "</a>" : ""}</div>
           <div class="main"><div class="title">${aTitle(r)}</div>
-            <div class="meta">${esc([r.type, r.genre || m.genres, m.eps ? m.eps + (m.eps === 1 ? " episode" : " episodes") : "", m.avg ? "Avg runtime " + m.avg + " min" : ""].filter(Boolean).join(" • "))}</div>
+            <div class="meta">${esc([tType(r.type), tGenre(r.genre || m.genres), m.eps ? m.eps + (m.eps === 1 ? " avsnitt" : " avsnitt") : "", m.avg ? "Snittlängd " + m.avg + " min" : ""].filter(Boolean).join(" • "))}</div>
             <div class="badges">
-              ${r.topRated ? `<span class="b ok">★ Top rated</span>` : ""}${(!r.topRated || r.date) ? `<span class="b ${statusClass(r.status)}">${esc(r.status)}</span>` : ""}
+              ${r.topRated ? `<span class="b ok">★ Topprankad</span>` : ""}${(!r.topRated || r.date) ? `<span class="b ${statusClass(r.status)}">${esc(tStatus(r.status))}</span>` : ""}
               ${r.rt != null ? `<span class="b info">RT ${esc(r.rt)}%</span>` : ""}
               ${r.mc != null ? `<span class="b info">MC ${esc(r.mc)}</span>` : ""}
             </div></div>
-          <div class="right"><div class="date">${esc(r.dateLabel)}</div><div class="days">${daysText(n)}</div></div>
+          <div class="right"><div class="date">${esc(tDate(r.dateLabel))}</div><div class="days">${daysText(n)}</div></div>
           ${descHtml ? `<div class="desc">${descHtml}</div>` : ""}
           ${r.notes ? `<div class="note">${esc(r.notes)}</div>` : ""}
-          <div class="src"><span>Source: ${esc(r.source)}</span>
-            <span class="acts">${(r.date && n !== null && n >= 0) ? `<button class="calbtn" data-cal="${esc(r.title)}" title="Download a calendar event with a reminder (opens in Apple Calendar)">📅 Add to calendar</button>` : ""}${r.trailer ? `<button class="trbtn" data-tr="${esc(r.trailer)}" data-tt="${esc(r.title)}">▶ Watch trailer</button>` : ""}
-            <label><input type="checkbox" data-t="${esc(wKey(r))}" ${isW ? "checked" : ""}> Watched</label></span></div>
+          <div class="src"><span>Källa: ${esc(r.source)}</span>
+            <span class="acts">${(r.date && n !== null && n >= 0) ? `<button class="calbtn" data-cal="${esc(r.title)}" title="Ladda ner en kalenderhändelse med påminnelse (öppnas i Apple Kalender)">📅 Lägg i kalendern</button>` : ""}${r.trailer ? `<button class="trbtn" data-tr="${esc(r.trailer)}" data-tt="${esc(r.title)}">▶ Se trailer</button>` : ""}
+            <label><input type="checkbox" data-t="${esc(wKey(r))}" ${isW ? "checked" : ""}> Sedd</label></span></div>
         </div>`;
       }).join("") + (gc ? "" : "</div>");
   }).join("");
@@ -317,16 +341,16 @@ $("#nextup").textContent = nextUpdateText();
 
 const DATA_URL = "https://raw.githubusercontent.com/mpgfi/streaming-watchlist/main/watchlist.json";
 (async () => {
-  const timer = setTimeout(() => { if (!loaded) $("#live").textContent = "Still trying to reach the data…"; }, 10000);
+  const timer = setTimeout(() => { if (!loaded) $("#live").textContent = "Försöker fortfarande nå datan…"; }, 10000);
   try {
     const r = await fetch(DATA_URL, { cache: "no-cache" });
     if (!r.ok) throw new Error(r.status);
     const j = await r.json();
     DATA = j.shows || [];
-    if (j.lastChecked) $("#checked").textContent = j.lastChecked;
+    if (j.lastChecked) $("#checked").textContent = tDate(j.lastChecked);
     $("#live").textContent = "";
   } catch (e) {
-    $("#out").innerHTML = '<p class="empty">Could not load the watchlist data right now. Try again later.</p>';
+    $("#out").innerHTML = '<p class="empty">Det gick inte att ladda bevakningslistan just nu. Försök igen senare.</p>';
   }
   clearTimeout(timer); loaded = true;
   if (DATA.length) render();
@@ -351,7 +375,7 @@ function linkOf(r) {
   const f = SEARCH[r.service]; if (!f) return "";
   return f(encodeURIComponent(r.title.replace(/\s*\([^)]*\)\s*$/, "")));
 }
-const aTitle = (r) => { const u = linkOf(r); return u ? `<a class="tl" href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="Open on ${esc(r.service)}">${esc(r.title)}</a>` : esc(r.title); };
+const aTitle = (r) => { const u = linkOf(r); return u ? `<a class="tl" href="${esc(u)}" target="_blank" rel="noopener noreferrer" title="Öppna på ${esc(r.service)}">${esc(r.title)}</a>` : esc(r.title); };
 
 // Calendar reminder: builds a standard .ics file (all-day event on the premiere date, alert at 09:00 that day)
 // which Apple Calendar (and Google/Outlook) opens as a new event.
@@ -363,13 +387,13 @@ function downloadIcs(r) {
   const d1 = nx.getFullYear() + String(nx.getMonth() + 1).padStart(2, "0") + String(nx.getDate()).padStart(2, "0");
   const stamp = new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
   const url = linkOf(r);
-  const desc = [r.type, r.genre, "On " + r.service + " in Sweden", r.dateLabel, url].filter(Boolean).join(" \u2022 ");
+  const desc = [tType(r.type), tGenre(r.genre), "På " + r.service + " i Sverige", tDate(r.dateLabel), url].filter(Boolean).join(" \u2022 ");
   const lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Streaming watchlist//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
     "BEGIN:VEVENT", "UID:" + (r.slug || r.title.replace(/\W+/g, "-")) + "-" + d0 + "@streaming-watchlist", "DTSTAMP:" + stamp,
     "DTSTART;VALUE=DATE:" + d0, "DTEND;VALUE=DATE:" + d1,
-    "SUMMARY:" + icsEsc("Premiere: " + r.title + " (" + r.service + ")"), "DESCRIPTION:" + icsEsc(desc)];
+    "SUMMARY:" + icsEsc("Premiär: " + r.title + " (" + r.service + ")"), "DESCRIPTION:" + icsEsc(desc)];
   if (url) lines.push("URL:" + url);
-  lines.push("TRANSP:TRANSPARENT", "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + icsEsc(r.title + " premieres today on " + r.service),
+  lines.push("TRANSP:TRANSPARENT", "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + icsEsc(r.title + " har premiär idag på " + r.service),
     "TRIGGER;RELATED=START:PT9H", "END:VALARM", "END:VEVENT", "END:VCALENDAR");
   const blob = new Blob([lines.map(icsFold).join("\r\n") + "\r\n"], { type: "text/calendar;charset=utf-8" });
   const a = document.createElement("a");
@@ -387,7 +411,7 @@ function nextUpdateText() {
   let add = (5 - wd + 7) % 7;
   if (add === 0 && mins >= 600) add = 7;
   const d = new Date(Date.UTC(+g("year"), +g("month") - 1, +g("day") + add, 12));
-  return "Next update: " + d.toLocaleDateString("en-GB", { timeZone: "UTC", weekday: "long", day: "numeric", month: "long", year: "numeric" }) + " at about 10:00 (Swedish time).";
+  return "Nästa uppdatering: " + d.toLocaleDateString("sv-SE", { timeZone: "UTC", weekday: "long", day: "numeric", month: "long", year: "numeric" }) + " vid ca 10:00.";
 }
 const keyOf = (r) => r.tvmazeId ? String(r.tvmazeId) : "t:" + r.title;
 const norm = (s) => String(s).toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "");
