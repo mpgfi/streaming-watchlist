@@ -636,6 +636,21 @@
    "slug": "succession",
    "major": true,
    "topRated": true
+  },
+  {
+   "title": "Ahsoka (S2)",
+   "service": "Disney+",
+   "type": "Returning season",
+   "genre": "Sci-fi / Star Wars",
+   "date": "2027-01-20",
+   "dateLabel": "20 Jan 2027",
+   "status": "Reported",
+   "notes": "Officiellt datum från Disney och Lucasfilm (D23, augusti 2026). Star Wars-serien är en Disney+-original som lanseras världen över, även i Sverige.",
+   "source": "space.com (D23-trailer), starwars.com (Disney/Lucasfilm)",
+   "rt": null,
+   "mc": null,
+   "slug": "ahsoka-s2",
+   "major": true
   }
  ]
 }
