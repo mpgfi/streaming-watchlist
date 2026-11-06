@@ -119,7 +119,7 @@
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 14. Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 15. Updated weekly. Ticking Watched is saved only in this browser.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -218,7 +218,7 @@ function renderList() {
           <div class="main"><div class="title">${aTitle(r)}</div>
             <div class="meta">${esc([r.type, r.genre || m.genres, m.eps ? m.eps + (m.eps === 1 ? " episode" : " episodes") : "", m.avg ? "Avg runtime " + m.avg + " min" : ""].filter(Boolean).join(" • "))}</div>
             <div class="badges">
-              <span class="b ${statusClass(r.status)}">${esc(r.status)}</span>
+              ${r.topRated ? `<span class="b ok">★ Top rated</span>` : `<span class="b ${statusClass(r.status)}">${esc(r.status)}</span>`}
               ${r.rt != null ? `<span class="b info">RT ${esc(r.rt)}%</span>` : ""}
               ${r.mc != null ? `<span class="b info">MC ${esc(r.mc)}</span>` : ""}
             </div></div>
