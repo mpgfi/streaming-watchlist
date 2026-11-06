@@ -125,7 +125,7 @@
   <footer>
     Datum markerade som Rapporterad kommer från internationella eller sekundära tablåer och kan skilja sig i Sverige.
     Betygen gäller hela serien: Rotten Tomatoes kritikerbetyg och Metacritic Metascore. Tomt betyg betyder att serien inte har släppts än eller inte finns listad.
-    Sidversion 25. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
+    Sidversion 26. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -226,7 +226,7 @@ function renderList() {
   if (!DATA.length) { $("#out").innerHTML = '<p class="empty">Bevakningslistan är tom. Den fylls på vid nästa veckouppdatering.</p>'; return; }
   const rows = DATA.filter(r =>
     (!serviceSel.size || serviceSel.has(r.service)) &&
-    [...genreSel].every(n => (GENRES.find(g => g[0] === n)[1]).test(genreText(r))) &&
+    (!genreSel.size || [...genreSel].some(n => (GENRES.find(g => g[0] === n)[1]).test(genreText(r)))) &&
     (!query || r.title.toLowerCase().includes(query) || (r.genre || "").toLowerCase().includes(query)) &&
     !(hideWatched && isWatched(r)));
   if (!rows.length) { $("#out").innerHTML = '<p class="empty">Inget matchar.</p>'; return; }
