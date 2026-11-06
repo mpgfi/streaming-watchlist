@@ -7,38 +7,38 @@
 <style>
   :root {
     --bg: #f6f7f9; --card: #ffffff; --text: #1b1f27; --muted: #5d6675; --line: #e2e5ea;
-    --accent: #1f3864; --accent-ink: #ffffff;
+    --accent: #1f3864; --accent-ink: #ffffff; --pg: #808080; --pg-text: #12161d; --pg-muted: #1f252e;
     --ok-bg: #e2efda; --ok-ink: #2d5a1b; --warn-bg: #fff2cc; --warn-ink: #7a5b00; --info-bg: #e7edf8; --info-ink: #1f3864;
     --radius: 10px;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #12151b; --card: #1b1f27; --text: #e8ebf0; --muted: #9aa3b2; --line: #2b313c;
-      --accent: #8fb0ee; --accent-ink: #0d1626;
+      --accent: #8fb0ee; --accent-ink: #0d1626; --pg: #808080; --pg-text: #12161d; --pg-muted: #1f252e;
       --ok-bg: #1f3a1a; --ok-ink: #b7e3a3; --warn-bg: #3d3210; --warn-ink: #f0d27a; --info-bg: #1d2a44; --info-ink: #b9cdf5;
     }
   }
   :root[data-theme="dark"] {
       --bg: #12151b; --card: #1b1f27; --text: #e8ebf0; --muted: #9aa3b2; --line: #2b313c;
-      --accent: #8fb0ee; --accent-ink: #0d1626;
+      --accent: #8fb0ee; --accent-ink: #0d1626; --pg: #808080; --pg-text: #12161d; --pg-muted: #1f252e;
       --ok-bg: #1f3a1a; --ok-ink: #b7e3a3; --warn-bg: #3d3210; --warn-ink: #f0d27a; --info-bg: #1d2a44; --info-ink: #b9cdf5;
     }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.45 Arial, Helvetica, sans-serif; }
+  body { margin: 0; background: var(--pg); color: var(--pg-text); font: 15px/1.45 Arial, Helvetica, sans-serif; }
   .wrap { max-width: 1040px; margin: 0 auto; padding: 24px max(16px, env(safe-area-inset-left, 0px)) 56px max(16px, env(safe-area-inset-right, 0px)); }
   .row > div { min-width: 0; }
   .skel { height: 74px; border-radius: var(--radius); background: var(--line); opacity: .5; margin-bottom: 10px; }
   h1 { margin: 0 0 4px; font-size: 26px; }
-  .sub { color: var(--muted); margin: 0 0 20px; }
+  .sub { color: var(--pg-muted); margin: 0 0 20px; }
   .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 20px; }
   .chip { border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 999px; padding: 6px 12px; font: inherit; cursor: pointer; }
   .chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
   .search { margin-left: auto; border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 8px; padding: 7px 10px; font: inherit; min-width: 190px; }
-  .toggle { color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .toggle { color: var(--pg-muted); display: flex; align-items: center; gap: 6px; }
   h2 { font-size: 17px; margin: 28px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--accent); }
-  h2 span { color: var(--muted); font-weight: normal; font-size: 13px; margin-left: 6px; }
+  h2 span { color: var(--pg-muted); font-weight: normal; font-size: 13px; margin-left: 6px; }
   .grid { display: grid; gap: 10px; }
-  .row { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 14px 12px 8px;
+  .row { color: var(--text); background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 14px 12px 8px;
          display: grid; grid-template-columns: 30px 150px 1fr auto; gap: 6px 14px; align-items: start; }
   .row.collapsed { grid-template-columns: 30px 1fr auto; padding-block: 6px; align-items: center; }
   .row.collapsed .title { font-size: 15px; }
@@ -70,6 +70,8 @@
   #tr iframe { width: 100%; height: 100%; border: 0; display: block; }
   h2.grp { display: flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; }
   h2.grp .chev { width: 26px; height: 26px; grid-row: auto; }
+  h2.grp .chev { color: var(--pg-muted); }
+  h2.grp .chev:hover { background: rgba(0,0,0,.12); color: var(--pg-text); }
   .row.watched { opacity: .55; }
   .row.watched .title { text-decoration: line-through; }
   .title { font-weight: bold; font-size: 16px; }
@@ -85,8 +87,8 @@
   .note { grid-column: 3 / -1; font-size: 13px; }
   .src { grid-column: 3 / -1; font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
   .src label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-  .empty { color: var(--muted); padding: 24px 0; }
-  footer { margin-top: 36px; color: var(--muted); font-size: 12px; }
+  .empty { color: var(--pg-muted); padding: 24px 0; }
+  footer { margin-top: 36px; color: var(--pg-muted); font-size: 12px; }
   @media (max-width: 560px) {
     #tr { width: calc(100vw - 16px); right: 8px; bottom: 8px; }
     .row { grid-template-columns: 30px 96px 1fr; }
@@ -110,7 +112,7 @@
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 5. Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 6. Updated weekly. Ticking Watched is saved only in this browser.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
