@@ -125,7 +125,7 @@
   <footer>
     Datum markerade som Rapporterad kommer från internationella eller sekundära tablåer och kan skilja sig i Sverige.
     Betygen gäller hela serien: Rotten Tomatoes kritikerbetyg och Metacritic Metascore. Tomt betyg betyder att serien inte har släppts än eller inte finns listad.
-    Sidversion 24. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
+    Sidversion 25. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -135,8 +135,8 @@
 <script>
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-let DATA = [], loaded = false, service = "All", query = "", hideWatched = false;
-let genreSel = "All";
+let DATA = [], loaded = false, query = "", hideWatched = false;
+const serviceSel = new Set(), genreSel = new Set();   // empty = "Alla"
 const GENRES = [["Drama", /drama/i, "Drama"], ["Comedy", /comed|sitcom/i, "Komedi"], ["Sci-fi", /sci-?fi|science/i, "Sci-fi"], ["Fantasy", /fantasy/i, "Fantasy"], ["Thriller", /thriller|mystery|spy/i, "Thriller"],
   ["Crime", /crime/i, "Kriminal"], ["Horror", /horror/i, "Skräck"], ["Action", /action|adventure/i, "Action"], ["Documentary", /documentar|true crime|nature|history/i, "Dokumentär"],
   ["Reality", /reality|game show|talk|dating|competition/i, "Reality"], ["Animation", /animat|anime|cartoon|children/i, "Animation"]];
@@ -207,17 +207,17 @@ function statusClass(s) { s = s || ""; return s.startsWith("Confirmed") ? "ok" :
 
 function renderBar() {
   const services = [...new Set(DATA.map(r => r.service))].sort();
-  if (service !== "All" && !services.includes(service)) service = "All";
+  [...serviceSel].forEach(x => { if (!services.includes(x)) serviceSel.delete(x); });
   const present = GENRES.filter(([n, re]) => DATA.some(r => re.test(genreText(r)))).map(g => g[0]);
-  if (genreSel !== "All" && !present.includes(genreSel)) genreSel = "All";
+  [...genreSel].forEach(x => { if (!present.includes(x)) genreSel.delete(x); });
   $("#viewbar").innerHTML = `<button class="chip viewbtn" id="view" aria-pressed="false">${compact ? "Fäll ut alla" : "Fäll ihop alla"}</button>` +
     `<label class="toggle"><input type="checkbox" id="hw" ${hideWatched ? "checked" : ""}> Dölj sedda</label>`;
   $("#bar").innerHTML = '<span class="glabel">Tjänster</span>' + ["All", ...services].map(s =>
-    `<button class="chip" data-s="${esc(s)}" aria-pressed="${s === service}">${s === "All" ? "Alla" : esc(s)}</button>`).join("");
-  $("#genres").innerHTML = '<span class="glabel">Genre</span>' + ["All", ...present].map(g => `<button class="chip" data-gn="${esc(g)}" aria-pressed="${g === genreSel}">${g === "All" ? "Alla" : esc(GLABEL[g] || g)}</button>`).join("");
-  document.querySelectorAll(".chip[data-gn]").forEach(b => b.onclick = () => { genreSel = b.dataset.gn; render(); });
+    `<button class="chip" data-s="${esc(s)}" aria-pressed="${s === "All" ? serviceSel.size === 0 : serviceSel.has(s)}">${s === "All" ? "Alla" : esc(s)}</button>`).join("");
+  $("#genres").innerHTML = '<span class="glabel">Genre</span>' + ["All", ...present].map(g => `<button class="chip" data-gn="${esc(g)}" aria-pressed="${g === "All" ? genreSel.size === 0 : genreSel.has(g)}">${g === "All" ? "Alla" : esc(GLABEL[g] || g)}</button>`).join("");
+  document.querySelectorAll(".chip[data-gn]").forEach(b => b.onclick = () => { const g = b.dataset.gn; if (g === "All") genreSel.clear(); else if (genreSel.has(g)) genreSel.delete(g); else genreSel.add(g); render(); });
   $("#view").onclick = () => { compact = !compact; rowOv = {}; grpCollapsed = {}; try { localStorage.setItem("compact", compact ? "1" : "0"); } catch (e) {} keep("rowOv", rowOv); keep("grpCollapsed", grpCollapsed); render(); };
-  document.querySelectorAll(".chip[data-s]").forEach(b => b.onclick = () => { service = b.dataset.s; render(); });
+  document.querySelectorAll(".chip[data-s]").forEach(b => b.onclick = () => { const v = b.dataset.s; if (v === "All") serviceSel.clear(); else if (serviceSel.has(v)) serviceSel.delete(v); else serviceSel.add(v); render(); });
   $("#hw").onchange = (e) => { hideWatched = e.target.checked; renderList(); };
 }
 
@@ -225,8 +225,8 @@ function renderList() {
   if (!loaded) return;
   if (!DATA.length) { $("#out").innerHTML = '<p class="empty">Bevakningslistan är tom. Den fylls på vid nästa veckouppdatering.</p>'; return; }
   const rows = DATA.filter(r =>
-    (service === "All" || r.service === service) &&
-    (genreSel === "All" || (GENRES.find(g => g[0] === genreSel)[1]).test(genreText(r))) &&
+    (!serviceSel.size || serviceSel.has(r.service)) &&
+    [...genreSel].every(n => (GENRES.find(g => g[0] === n)[1]).test(genreText(r))) &&
     (!query || r.title.toLowerCase().includes(query) || (r.genre || "").toLowerCase().includes(query)) &&
     !(hideWatched && isWatched(r)));
   if (!rows.length) { $("#out").innerHTML = '<p class="empty">Inget matchar.</p>'; return; }
