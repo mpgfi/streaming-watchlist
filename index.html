@@ -115,13 +115,14 @@
 <div class="wrap">
   <h1>Streaming premiere watchlist</h1>
   <p class="sub">Major series on services in Sweden. Last checked <span id="checked">–</span>. <span id="live"></span></p>
+  <p class="sub" id="nextup"></p>
   <div class="bar" id="bar"></div>
   <div class="bar" id="genres"></div>
   <div id="out"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div>
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 18. Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 19. Updated weekly, on Fridays. Ticking Watched is saved only in this browser.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -312,6 +313,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#tr"
   bar.addEventListener("pointerup", end); bar.addEventListener("pointercancel", end);
 })();
 render();
+$("#nextup").textContent = nextUpdateText();
 
 const DATA_URL = "https://raw.githubusercontent.com/mpgfi/streaming-watchlist/main/watchlist.json";
 (async () => {
@@ -374,6 +376,18 @@ function downloadIcs(r) {
   a.href = URL.createObjectURL(blob); a.download = (r.slug || "premiere") + ".ics";
   document.body.appendChild(a); a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+}
+// The list is refreshed every Friday at 10:00 Swedish time. Work out the next such moment (in Swedish clock time).
+function nextUpdateText() {
+  const tz = "Europe/Stockholm";
+  const parts = new Intl.DateTimeFormat("en-GB", { timeZone: tz, year: "numeric", month: "numeric", day: "numeric", hour: "numeric", minute: "numeric", weekday: "short", hour12: false }).formatToParts(new Date());
+  const g = (t) => parts.find(p => p.type === t).value;
+  const wd = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(g("weekday"));
+  const mins = (+g("hour") % 24) * 60 + +g("minute");
+  let add = (5 - wd + 7) % 7;
+  if (add === 0 && mins >= 600) add = 7;
+  const d = new Date(Date.UTC(+g("year"), +g("month") - 1, +g("day") + add, 12));
+  return "Next update: " + d.toLocaleDateString("en-GB", { timeZone: "UTC", weekday: "long", day: "numeric", month: "long", year: "numeric" }) + " at about 10:00 (Swedish time).";
 }
 const keyOf = (r) => r.tvmazeId ? String(r.tvmazeId) : "t:" + r.title;
 const norm = (s) => String(s).toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "");
