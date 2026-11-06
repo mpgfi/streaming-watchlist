@@ -117,7 +117,7 @@
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 11. Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 12. Updated weekly. Ticking Watched is saved only in this browser.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -128,7 +128,6 @@
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let DATA = [], loaded = false, service = "All", query = "", hideWatched = false;
-let majorOnly = false; try { majorOnly = localStorage.getItem("majorOnly") === "1"; } catch (e) {}
 let genreSel = "All";
 const GENRES = [["Drama", /drama/i], ["Comedy", /comed|sitcom/i], ["Sci-fi", /sci-?fi|science/i], ["Fantasy", /fantasy/i], ["Thriller", /thriller|mystery|spy/i],
   ["Crime", /crime/i], ["Horror", /horror/i], ["Action", /action|adventure/i], ["Documentary", /documentar|true crime|nature|history/i],
@@ -167,11 +166,10 @@ function renderBar() {
   const present = GENRES.filter(([n, re]) => DATA.some(r => re.test(genreText(r)))).map(g => g[0]);
   if (genreSel !== "All" && !present.includes(genreSel)) genreSel = "All";
   $("#bar").innerHTML = `<button class="chip viewbtn" id="view" aria-pressed="false">${compact ? "Expand all" : "Compress all"}</button>` +
-    `<button class="chip viewbtn" id="major" aria-pressed="${majorOnly}">Major only</button>` + ["All", ...services].map(s =>
+    ["All", ...services].map(s =>
     `<button class="chip" data-s="${esc(s)}" aria-pressed="${s === service}">${esc(s)}</button>`).join("") +
     `<label class="toggle"><input type="checkbox" id="hw" ${hideWatched ? "checked" : ""}> Hide watched</label>` +
     `<input class="search" id="q" type="search" placeholder="Search titles" value="${esc(query)}" aria-label="Search titles">`;
-  $("#major").onclick = () => { majorOnly = !majorOnly; try { localStorage.setItem("majorOnly", majorOnly ? "1" : "0"); } catch (e) {} render(); };
   $("#genres").innerHTML = '<span class="glabel">Genre</span>' + ["All", ...present].map(g => `<button class="chip" data-gn="${esc(g)}" aria-pressed="${g === genreSel}">${esc(g)}</button>`).join("");
   document.querySelectorAll(".chip[data-gn]").forEach(b => b.onclick = () => { genreSel = b.dataset.gn; render(); });
   $("#view").onclick = () => { compact = !compact; rowOv = {}; grpCollapsed = {}; try { localStorage.setItem("compact", compact ? "1" : "0"); } catch (e) {} keep("rowOv", rowOv); keep("grpCollapsed", grpCollapsed); render(); };
@@ -185,7 +183,6 @@ function renderList() {
   if (!DATA.length) { $("#out").innerHTML = '<p class="empty">The watchlist is empty. It fills in at the next weekly update.</p>'; return; }
   const rows = DATA.filter(r =>
     (service === "All" || r.service === service) &&
-    (!majorOnly || r.major) &&
     (genreSel === "All" || (GENRES.find(g => g[0] === genreSel)[1]).test(genreText(r))) &&
     (!query || r.title.toLowerCase().includes(query) || (r.genre || "").toLowerCase().includes(query)) &&
     !(hideWatched && watched[r.title]));
