@@ -259,6 +259,68 @@
    "mc": null,
    "slug": "beck-55-syndens-lon",
    "major": true
+  },
+  {
+   "title": "The Paper (S2)",
+   "service": "SkyShowtime",
+   "type": "Returning season",
+   "genre": "Comedy",
+   "date": "2026-11-06",
+   "dateLabel": "6 Nov 2026",
+   "status": "Confirmed",
+   "notes": "Mockumentary from the creators of The Office",
+   "source": "hurbra.se",
+   "rt": 81,
+   "mc": null,
+   "slug": "the-paper-s2",
+   "tvmazeId": 84611,
+   "major": true
+  },
+  {
+   "title": "Only Murders in the Building (new season)",
+   "service": "Disney+",
+   "type": "Returning season",
+   "genre": "Comedy / mystery",
+   "date": "2026-12-08",
+   "dateLabel": "8 Dec 2026",
+   "status": "Reported",
+   "notes": "Season 6, set in London",
+   "source": "press.disney.co.uk (official Disney+ date), justwatch.com/se",
+   "rt": 95,
+   "mc": 77,
+   "slug": "only-murders-in-the-building-new-season",
+   "tvmazeId": 48830,
+   "major": true
+  },
+  {
+   "title": "Stick (S2)",
+   "service": "Apple TV",
+   "type": "Returning season",
+   "genre": "Comedy",
+   "date": "2026-11-04",
+   "dateLabel": "4 Nov 2026",
+   "status": "Confirmed",
+   "notes": "Golf comedy-drama starring Owen Wilson",
+   "source": "hurbra.se",
+   "rt": null,
+   "mc": null,
+   "slug": "stick-s2",
+   "major": true
+  },
+  {
+   "title": "The Altruists",
+   "service": "Netflix",
+   "type": "New series",
+   "genre": "Drama",
+   "date": "2026-11-19",
+   "dateLabel": "19 Nov 2026",
+   "status": "Confirmed",
+   "notes": "Drama about the FTX collapse; Julia Garner and Anthony Boyle, 8 episodes",
+   "source": "hurbra.se",
+   "rt": null,
+   "mc": null,
+   "slug": "the-altruists",
+   "major": true
   }
  ]
 }

@@ -66,22 +66,6 @@
    "major": true
   },
   {
-   "title": "Only Murders in the Building (new season)",
-   "service": "Disney+",
-   "type": "Returning season",
-   "genre": "Comedy mystery",
-   "date": "2026-12-08",
-   "dateLabel": "8 Dec 2026",
-   "status": "Reported",
-   "notes": "Season is set in London",
-   "source": "sortiraparis.com",
-   "rt": 95,
-   "mc": 77,
-   "slug": "only-murders-in-the-building-new-season",
-   "tvmazeId": 48830,
-   "major": true
-  },
-  {
    "title": "Pride and Prejudice",
    "service": "Netflix",
    "type": "New series",
@@ -127,22 +111,6 @@
    "mc": 83,
    "slug": "the-last-of-us-s3",
    "tvmazeId": 46562,
-   "major": true
-  },
-  {
-   "title": "The Paper (S2)",
-   "service": "SkyShowtime",
-   "type": "Returning season",
-   "genre": "Comedy",
-   "date": "2026-11-06",
-   "dateLabel": "6 Nov 2026",
-   "status": "Reported",
-   "notes": "First four episodes 6 Nov, then weekly (European SkyShowtime listing)",
-   "source": "binge.nl, spidersweb.pl",
-   "rt": 81,
-   "mc": null,
-   "slug": "the-paper-s2",
-   "tvmazeId": 84611,
    "major": true
   },
   {
