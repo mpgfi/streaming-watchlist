@@ -64,6 +64,9 @@
   #tr { position: fixed; right: 20px; bottom: 20px; width: 480px; min-width: 280px; max-width: calc(100vw - 16px); z-index: 50; background: #111; color: #fff;
         border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,.45); overflow: hidden; resize: horizontal; display: flex; flex-direction: column; }
   #tr[hidden] { display: none; }
+  #tr.full { inset: 0 !important; width: 100vw !important; height: 100vh; height: 100dvh; max-width: none; border-radius: 0; resize: none; box-shadow: none; padding-top: env(safe-area-inset-top, 0px); }
+  #tr.full .bar2 { cursor: default; }
+  #tr.full .vid { flex: 1; aspect-ratio: auto; min-height: 0; }
   #tr .bar2 { display: flex; align-items: center; gap: 10px; padding: 6px 8px 6px 12px; cursor: move; user-select: none; touch-action: none; font-size: 13px; background: #222; }
   #tr .ttl { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: bold; }
   #tr a { color: #9cc0ff; font-size: 12px; white-space: nowrap; }
@@ -96,7 +99,6 @@
   .empty { color: var(--pg-muted); padding: 24px 0; }
   footer { margin-top: 36px; color: var(--pg-muted); font-size: 12px; }
   @media (max-width: 560px) {
-    #tr { width: calc(100vw - 16px); right: 8px; bottom: 8px; }
     .row { grid-template-columns: 30px 96px 1fr; }
     .row.collapsed { grid-template-columns: 30px 1fr auto; }
     .art { width: 96px; height: 96px; grid-row: 1 / span 2; }
@@ -119,7 +121,7 @@
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 17. Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 18. Updated weekly. Ticking Watched is saved only in this browser.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -263,20 +265,40 @@ function renderList() {
 function render() { renderBar(); renderList(); }
 
 // ---- Floating trailer window: drag by the title bar, resize from the lower edge; Esc or × closes it ----
+const isPhone = () => matchMedia("(max-width: 560px), (pointer: coarse) and (max-width: 900px)").matches;
 function openTrailer(id, title) {
   if (!/^[\w-]{6,20}$/.test(id)) return;
-  $("#trtitle").textContent = title + " – trailer";
+  const box = $("#tr"), phone = isPhone();
+  $("#trtitle").textContent = title + " \u2013 trailer";
   $("#trlink").href = "https://www.youtube.com/watch?v=" + id;
-  $("#trvid").innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0" title="Trailer" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
-  $("#tr").hidden = false;
+  // playsinline=0 lets iPhones play the video in their own full-screen player
+  $("#trvid").innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0' + (phone ? '&playsinline=0' : '') + '" title="Trailer" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+  box.hidden = false;
+  box.classList.toggle("full", phone);
+  if (phone) {
+    // phone: cover the whole screen, and ask the browser for real full screen too (needs this tap; ignored where unsupported)
+    box.style.cssText = "";
+    try { const p = box.requestFullscreen && box.requestFullscreen(); if (p && p.catch) p.catch(() => {}); } catch (e) {}
+  } else {
+    // desktop: 90% of the window width, but never taller than the window; centred
+    const w = Math.round(Math.max(280, Math.min(innerWidth * 0.9, (innerHeight - 90) * 16 / 9)));
+    const h = Math.round(w * 9 / 16) + 36;
+    box.style.width = w + "px";
+    box.style.left = Math.round((innerWidth - w) / 2) + "px";
+    box.style.top = Math.max(8, Math.round((innerHeight - h) / 2)) + "px";
+    box.style.right = "auto"; box.style.bottom = "auto";
+  }
 }
-function closeTrailer() { $("#trvid").innerHTML = ""; $("#tr").hidden = true; }
+function closeTrailer() {
+  try { if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen(); } catch (e) {}
+  $("#trvid").innerHTML = ""; $("#tr").hidden = true;
+}
 $("#trx").onclick = closeTrailer;
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("#tr").hidden) closeTrailer(); });
 (() => {
   const box = $("#tr"), bar = $("#trbar"); let dx = 0, dy = 0, drag = false;
   bar.addEventListener("pointerdown", (e) => {
-    if (e.target.closest("a,button")) return;
+    if (e.target.closest("a,button") || box.classList.contains("full")) return;
     const r = box.getBoundingClientRect(); dx = e.clientX - r.left; dy = e.clientY - r.top; drag = true;
     box.style.left = r.left + "px"; box.style.top = r.top + "px"; box.style.right = "auto"; box.style.bottom = "auto";
     bar.setPointerCapture(e.pointerId);
