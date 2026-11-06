@@ -84,22 +84,6 @@
    "major": true
   },
   {
-   "title": "Harry Potter (HBO series)",
-   "service": "HBO Max",
-   "type": "New series",
-   "genre": "Fantasy",
-   "date": "2026-12-25",
-   "dateLabel": "25 Dec 2026",
-   "status": "Reported",
-   "notes": "Christmas Day per HBO Max slate; some older sources said 2027, so re-check",
-   "source": "khaleejtimes.com, moviezine.se",
-   "rt": null,
-   "mc": null,
-   "slug": "harry-potter-hbo-series",
-   "tvmazeId": 68803,
-   "major": true
-  },
-  {
    "title": "Industry (S5)",
    "service": "HBO Max",
    "type": "Returning season",
@@ -145,23 +129,6 @@
    "mc": 77,
    "slug": "only-murders-in-the-building-new-season",
    "tvmazeId": 48830,
-   "major": true
-  },
-  {
-   "title": "Percy Jackson and the Olympians (S3)",
-   "service": "Disney+",
-   "type": "Returning season",
-   "genre": "Fantasy",
-   "date": "2026-11-20",
-   "dateLabel": "20 Nov 2026",
-   "status": "Confirmed",
-   "notes": "Two-episode premiere, then weekly",
-   "source": "whatsondisneyplus.com",
-   "rt": 95,
-   "mc": 73,
-   "slug": "percy-jackson-and-the-olympians-s3",
-   "tvmazeId": 48108,
-   "trailer": "UrJmNU1GeMg",
    "major": true
   },
   {
@@ -675,20 +642,6 @@
    "slug": "hunting-gary-glitter"
   },
   {
-   "title": "Hollywood Arts",
-   "service": "Netflix",
-   "type": "New series",
-   "genre": "",
-   "date": "2026-10-15",
-   "dateLabel": "15 Oct 2026",
-   "status": "Confirmed",
-   "notes": "",
-   "source": "metromode.se",
-   "rt": null,
-   "mc": null,
-   "slug": "hollywood-arts"
-  },
-  {
    "title": "Money Trap: The Karun Treasure",
    "service": "Netflix",
    "type": "New series",
@@ -1053,20 +1006,6 @@
    "slug": "georgie-mandy-s-first-marriage-s3"
   },
   {
-   "title": "Courage the Cowardly Dog (S2)",
-   "service": "HBO Max",
-   "type": "Returning season",
-   "genre": "Animation",
-   "date": "2026-10-16",
-   "dateLabel": "16 Oct 2026",
-   "status": "Confirmed",
-   "notes": "",
-   "source": "metromode.se",
-   "rt": null,
-   "mc": null,
-   "slug": "courage-the-cowardly-dog-s2"
-  },
-  {
    "title": "Gold Rush (S17)",
    "service": "HBO Max",
    "type": "Returning season",
@@ -1333,20 +1272,6 @@
    "slug": "gift"
   },
   {
-   "title": "Totally Spies! (S8)",
-   "service": "HBO Max",
-   "type": "Returning season",
-   "genre": "Animation",
-   "date": "2026-11-20",
-   "dateLabel": "20 Nov 2026",
-   "status": "Confirmed",
-   "notes": "",
-   "source": "hurbra.se",
-   "rt": null,
-   "mc": null,
-   "slug": "totally-spies-s8"
-  },
-  {
    "title": "Signs of a Psychopath (S11)",
    "service": "HBO Max",
    "type": "Returning season",
@@ -1431,34 +1356,6 @@
    "slug": "the-five-star-weekend"
   },
   {
-   "title": "Avatar: Seven Havens",
-   "service": "SkyShowtime",
-   "type": "New series",
-   "genre": "Animation",
-   "date": "2026-10-17",
-   "dateLabel": "17 Oct 2026",
-   "status": "Confirmed",
-   "notes": "",
-   "source": "metromode.se",
-   "rt": null,
-   "mc": null,
-   "slug": "avatar-seven-havens"
-  },
-  {
-   "title": "Max & the Midknights (S3)",
-   "service": "SkyShowtime",
-   "type": "Returning season",
-   "genre": "Animation",
-   "date": "2026-10-24",
-   "dateLabel": "24 Oct 2026",
-   "status": "Confirmed",
-   "notes": "",
-   "source": "metromode.se",
-   "rt": null,
-   "mc": null,
-   "slug": "max-the-midknights-s3"
-  },
-  {
    "title": "Where the Sun Always Shines (S2)",
    "service": "SkyShowtime",
    "type": "Returning season",
@@ -1515,20 +1412,6 @@
    "slug": "surviving-alaska-women-of-the-wild"
   },
   {
-   "title": "Vampirina: Teenage Vampire (S2)",
-   "service": "Disney+",
-   "type": "Returning season",
-   "genre": "Animation",
-   "date": "2026-10-07",
-   "dateLabel": "7 Oct 2026",
-   "status": "Reported",
-   "notes": "Date from a US schedule",
-   "source": "tomsguide.com",
-   "rt": null,
-   "mc": null,
-   "slug": "vampirina-teenage-vampire-s2"
-  },
-  {
    "title": "Benefits with Friends (S2)",
    "service": "Disney+",
    "type": "Returning season",
@@ -1555,48 +1438,6 @@
    "rt": null,
    "mc": null,
    "slug": "megastorm"
-  },
-  {
-   "title": "Locker Diaries: Coven Academy",
-   "service": "Disney+",
-   "type": "New series",
-   "genre": "",
-   "date": "2026-10-17",
-   "dateLabel": "17 Oct 2026",
-   "status": "Reported",
-   "notes": "Date from a US schedule",
-   "source": "tomsguide.com",
-   "rt": null,
-   "mc": null,
-   "slug": "locker-diaries-coven-academy"
-  },
-  {
-   "title": "Marvel's Iron Man and his Awesome Friends",
-   "service": "Disney+",
-   "type": "Returning season",
-   "genre": "Animation",
-   "date": "2026-10-28",
-   "dateLabel": "28 Oct 2026",
-   "status": "Reported",
-   "notes": "Date from a US schedule",
-   "source": "tomsguide.com",
-   "rt": null,
-   "mc": null,
-   "slug": "marvel-s-iron-man-and-his-awesome-friends"
-  },
-  {
-   "title": "Marvel's Spidey and his Amazing Friends (S5)",
-   "service": "Disney+",
-   "type": "Returning season",
-   "genre": "Animation",
-   "date": "2026-10-30",
-   "dateLabel": "30 Oct 2026",
-   "status": "Reported",
-   "notes": "Date from a US schedule",
-   "source": "tomsguide.com",
-   "rt": null,
-   "mc": null,
-   "slug": "marvel-s-spidey-and-his-amazing-friends-s5"
   },
   {
    "title": "The Remarried Empress",
@@ -1653,20 +1494,6 @@
    "rt": null,
    "mc": null,
    "slug": "vienna-game"
-  },
-  {
-   "title": "Miraculous: Tales of Ladybug & Cat Noir (S7)",
-   "service": "Disney+",
-   "type": "Returning season",
-   "genre": "Animation",
-   "date": "2026-11-21",
-   "dateLabel": "21 Nov 2026",
-   "status": "Reported",
-   "notes": "Date from a US schedule",
-   "source": "timeout.com",
-   "rt": null,
-   "mc": null,
-   "slug": "miraculous-tales-of-ladybug-cat-noir-s7"
   },
   {
    "title": "Love in Disguise",
