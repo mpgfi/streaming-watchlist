@@ -112,7 +112,7 @@
   <footer>
     Dates marked Reported come from international or secondary schedules and may differ in Sweden.
     Scores are series-level Rotten Tomatoes critics and Metacritic Metascores; blank means not yet released or not listed.
-    Page version 8. Updated weekly. Ticking Watched is saved only in this browser.
+    Page version 9. Updated weekly. Ticking Watched is saved only in this browser.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -124,7 +124,7 @@ const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 let DATA = [], loaded = false, service = "All", query = "", hideWatched = false;
 let compact = false; try { compact = localStorage.getItem("compact") === "1"; } catch (e) {}
-const META = {};            // tvmazeId -> {img, desc}
+const META = {};            // key (tvmazeId or "t:title") -> {img, desc, eps, avg, genres}
 const CHEV = '<svg viewBox="0 0 10 10" aria-hidden="true"><path d="M3 1l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 let rowOv = {}, grpCollapsed = {};   // per-row overrides (true = collapsed) and collapsed service groups
 try { rowOv = JSON.parse(localStorage.getItem("rowOv") || "{}"); grpCollapsed = JSON.parse(localStorage.getItem("grpCollapsed") || "{}"); } catch (e) {}
@@ -183,13 +183,13 @@ function renderList() {
       (gc ? "" : '<div class="grid">') +
       (gc ? [] : list).map(r => {
         const n = daysUntil(r.date), isW = !!watched[r.title];
-        const m = META[r.tvmazeId] || {};
-        const full = m.desc || "", isOpen = openDesc.has(r.tvmazeId);
+        const k = keyOf(r), m = META[k] || {};
+        const full = m.desc || "", isOpen = openDesc.has(k);
         const descHtml = !full ? "" : full.length <= 160
           ? esc(full)
           : isOpen
-          ? esc(full) + ` <button class="more" data-l="${r.tvmazeId}" title="Show less">show less</button>`
-          : esc(full.slice(0, 160).replace(/\s+\S*$/, "")) + ` <button class="more" data-d="${r.tvmazeId}" title="Show full description">…</button>`;
+          ? esc(full) + ` <button class="more" data-l="${esc(k)}" title="Show less">show less</button>`
+          : esc(full.slice(0, 160).replace(/\s+\S*$/, "")) + ` <button class="more" data-d="${esc(k)}" title="Show full description">…</button>`;
         const col = isCollapsed(r.title);
         const chev = `<button class="chev" data-c="${esc(r.title)}" aria-expanded="${!col}" aria-label="${col ? "Expand" : "Collapse"} ${esc(r.title)}" title="${col ? "Expand" : "Collapse"}">${CHEV}</button>`;
         if (col) return `<div class="row collapsed${isW ? " watched" : ""}">${chev}
@@ -198,7 +198,7 @@ function renderList() {
         return `<div class="row${isW ? " watched" : ""}">${chev}
           <div class="art">${m.img ? `<img src="${esc(m.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}</div>
           <div class="main"><div class="title">${esc(r.title)}</div>
-            <div class="meta">${esc([r.type, r.genre, m.eps ? m.eps + (m.eps === 1 ? " episode" : " episodes") : "", m.avg ? "Avg runtime " + m.avg + " min" : ""].filter(Boolean).join(" • "))}</div>
+            <div class="meta">${esc([r.type, r.genre || m.genres, m.eps ? m.eps + (m.eps === 1 ? " episode" : " episodes") : "", m.avg ? "Avg runtime " + m.avg + " min" : ""].filter(Boolean).join(" • "))}</div>
             <div class="badges">
               <span class="b ${statusClass(r.status)}">${esc(r.status)}</span>
               ${r.rt != null ? `<span class="b info">RT ${esc(r.rt)}%</span>` : ""}
@@ -221,8 +221,8 @@ function renderList() {
     const flip = () => { const s = g.dataset.g; grpCollapsed[s] = !grpCollapsed[s]; if (!grpCollapsed[s]) delete grpCollapsed[s]; keep("grpCollapsed", grpCollapsed); renderList(); };
     g.onclick = flip; g.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); flip(); } };
   });
-  document.querySelectorAll('button[data-l]').forEach(b => b.onclick = () => { openDesc.delete(Number(b.dataset.l)); renderList(); });
-  document.querySelectorAll('button[data-d]').forEach(b => b.onclick = () => { openDesc.add(Number(b.dataset.d)); renderList(); });
+  document.querySelectorAll('button[data-l]').forEach(b => b.onclick = () => { openDesc.delete(b.dataset.l); renderList(); });
+  document.querySelectorAll('button[data-d]').forEach(b => b.onclick = () => { openDesc.add(b.dataset.d); renderList(); });
   document.querySelectorAll('input[data-t]').forEach(c => c.onchange = () => {
     if (c.checked) watched[c.dataset.t] = true; else delete watched[c.dataset.t];
     saveWatched(watched); renderList();
@@ -280,32 +280,61 @@ const DATA_URL = "https://raw.githubusercontent.com/mpgfi/streaming-watchlist/ma
 // Artwork and descriptions come from the free TVmaze API, looked up in the visitor's browser
 // and cached for a week so each series is only fetched once per browser.
 const strip = (html) => { const d = document.createElement("div"); d.innerHTML = html || ""; return (d.textContent || "").replace(/\s+/g, " ").trim(); };
+const keyOf = (r) => r.tvmazeId ? String(r.tvmazeId) : "t:" + r.title;
+const norm = (s) => String(s).toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "");
+const NET = { "Netflix": /netflix/i, "HBO Max": /hbo|max|discovery|tlc|investigation|hgtv|food|animal planet|travel|cnn|tnt|trutv|cartoon|adult swim|warner|oprah|own|lifetime|a&e/i,
+  "Disney+": /disney|hulu|fx|abc|nat geo|national geographic|freeform|marvel/i, "Prime Video": /prime|amazon|freevee/i, "Apple TV": /apple/i,
+  "SkyShowtime": /paramount|showtime|cbs|sky|mtv|nickelodeon|comedy central|bet|vh1/i };
+const sleep = (ms) => new Promise(res => setTimeout(res, ms));
+
+// Artwork, descriptions, genres and episode data come from the free TVmaze API, looked up in the visitor's
+// browser and cached for a week. Titles without a stored tvmazeId are matched by exact name + network;
+// if there is no safe match the card simply stays without artwork.
 async function loadMeta() {
   let cache = {}; try { cache = JSON.parse(localStorage.getItem("tvmazeCache") || "{}"); } catch (e) {}
   const now = Date.now(), WEEK = 7 * 864e5;
-  const ids = [...new Set(DATA.map(r => r.tvmazeId).filter(Boolean))];
-  for (const id of ids) if (cache[id] && cache[id].v === 2 && now - cache[id].t < WEEK) META[id] = cache[id];
+  const save = () => { try { localStorage.setItem("tvmazeCache", JSON.stringify(cache)); } catch (e) {} };
+  const todo = [];
+  const withId = DATA.filter(r => r.tvmazeId), without = DATA.filter(r => !r.tvmazeId);
+  for (const r of [...withId, ...without]) {
+    const k = keyOf(r);
+    if (cache[k] && cache[k].v === 3 && now - cache[k].t < WEEK) META[k] = cache[k]; else todo.push(r);
+  }
   renderList();
-  for (const id of ids.filter(i => !META[i])) {
+  for (const r of todo) {
+    const k = keyOf(r);
     try {
-      const r = await fetch("https://api.tvmaze.com/shows/" + id + "?embed=episodes");
-      if (r.ok) {
-        const j = await r.json();
+      let id = r.tvmazeId;
+      if (!id) {
+        const clean = r.title.replace(/\s*\([^)]*\)\s*$/, "");
+        const names = clean.split(" / ").map(norm);
+        const sr = await fetch("https://api.tvmaze.com/search/shows?q=" + encodeURIComponent(clean.split(" / ")[0]));
+        const list = sr.ok ? await sr.json() : [];
+        const yr = Number((r.date || "").slice(0, 4)) || 0;
+        const hit = list.map(x => x.show).find(s => names.includes(norm(s.name)) &&
+          NET[r.service] && NET[r.service].test((s.network && s.network.name) || (s.webChannel && s.webChannel.name) || "") &&
+          (r.type !== "New series" || !s.premiered || !yr || Number(s.premiered.slice(0, 4)) >= yr - 1));
+        id = hit ? hit.id : 0;
+        await sleep(600);
+      }
+      if (!id) { META[k] = cache[k] = { v: 3, t: Date.now() }; save(); continue; }
+      const res = await fetch("https://api.tvmaze.com/shows/" + id + "?embed=episodes");
+      if (res.ok) {
+        const j = await res.json();
         // Episode count and average runtime for the season the listing is about:
         // "(S4)" or "(Part 4)" in the title, otherwise the newest season TVmaze knows.
-        const title = (DATA.find(d => d.tvmazeId === id) || {}).title || "";
-        const sm = /\((?:S|Part )(\d+)\)/.exec(title);
+        const sm = /\((?:S|Part )(\d+)\)/.exec(r.title);
         const all = ((j._embedded && j._embedded.episodes) || []).filter(e => e.type === "regular" || !e.type);
         const season = sm ? Number(sm[1]) : Math.max(0, ...all.map(e => e.season));
         const eps = all.filter(e => e.season === season);
         const rts = eps.map(e => e.runtime).filter(Boolean);
         const avg = rts.length ? Math.round(rts.reduce((a, b) => a + b, 0) / rts.length) : (eps.length ? (j.averageRuntime || j.runtime || 0) : 0);
-        META[id] = cache[id] = { v: 2, t: Date.now(), img: (j.image && (j.image.medium || j.image.original)) || "", desc: strip(j.summary), eps: eps.length, avg: avg || 0 };
-        try { localStorage.setItem("tvmazeCache", JSON.stringify(cache)); } catch (e) {}
-        renderList();
+        META[k] = cache[k] = { v: 3, t: Date.now(), img: (j.image && (j.image.medium || j.image.original)) || "", desc: strip(j.summary),
+          eps: eps.length, avg: avg || 0, genres: (j.genres || []).slice(0, 3).join(", ") };
+        save(); renderList();
       }
     } catch (e) {}
-    await new Promise(res => setTimeout(res, 600)); // stay well inside TVmaze's rate limit
+    await sleep(600); // stay well inside TVmaze's rate limit
   }
 }
 </script>
