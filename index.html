@@ -125,7 +125,7 @@
   <footer>
     Datum markerade som Rapporterad kommer från internationella eller sekundära tablåer och kan skilja sig i Sverige.
     Betygen gäller hela serien: Rotten Tomatoes kritikerbetyg och Metacritic Metascore. Tomt betyg betyder att serien inte har släppts än eller inte finns listad.
-    Sidversion 26. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
+    Sidversion 27. Uppdateras varje vecka, på fredagar. Beskrivningar och avsnittsuppgifter kommer från TVmaze och är på engelska. Markeringen Sedd sparas bara i den här webbläsaren.
   </footer>
 </div>
 <div id="tr" hidden role="dialog" aria-label="Trailer">
@@ -257,7 +257,7 @@ function renderList() {
         return `<div class="row${isW ? " watched" : ""}">${chev}
           <div class="art">${linkOf(r) ? `<a class="artlink" href="${esc(linkOf(r))}" target="_blank" rel="noopener noreferrer" aria-label="Öppna ${esc(r.title)} på ${esc(r.service)}">` : ""}${m.img ? `<img src="${esc(m.img)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}${linkOf(r) ? "</a>" : ""}</div>
           <div class="main"><div class="title">${aTitle(r)}</div>
-            <div class="meta">${esc([tType(r.type), tGenre(r.genre || m.genres), m.eps ? m.eps + (m.eps === 1 ? " avsnitt" : " avsnitt") : "", m.avg ? "Snittlängd " + m.avg + " min" : ""].filter(Boolean).join(" • "))}</div>
+            <div class="meta">${esc([tType(r.type), tGenre(r.genre || m.genres), m.seasons ? m.seasons + (m.seasons === 1 ? " säsong" : " säsonger") : "", m.eps ? m.eps + " avsnitt" : "", m.avg ? "Snittlängd " + m.avg + " min" : ""].filter(Boolean).join(" • "))}</div>
             <div class="badges">
               ${r.topRated ? `<span class="b ok">★ Topprankad</span>` : ""}${(!r.topRated || r.date) ? `<span class="b ${statusClass(r.status)}">${esc(tStatus(r.status))}</span>` : ""}
               ${r.rt != null ? `<span class="b info">RT ${esc(r.rt)}%</span>` : ""}
@@ -434,7 +434,7 @@ async function loadMeta() {
   const withId = DATA.filter(r => r.tvmazeId), without = DATA.filter(r => !r.tvmazeId);
   for (const r of [...withId, ...without]) {
     const k = keyOf(r);
-    if (cache[k] && cache[k].v === 3 && now - cache[k].t < WEEK) META[k] = cache[k]; else todo.push(r);
+    if (cache[k] && cache[k].v === 4 && now - cache[k].t < WEEK) META[k] = cache[k]; else todo.push(r);
   }
   renderList();
   for (const r of todo) {
@@ -453,7 +453,7 @@ async function loadMeta() {
         id = hit ? hit.id : 0;
         await sleep(600);
       }
-      if (!id) { META[k] = cache[k] = { v: 3, t: Date.now() }; save(); continue; }
+      if (!id) { META[k] = cache[k] = { v: 4, t: Date.now() }; save(); continue; }
       const res = await fetch("https://api.tvmaze.com/shows/" + id + "?embed=episodes");
       if (res.ok) {
         const j = await res.json();
@@ -462,11 +462,12 @@ async function loadMeta() {
         const sm = /\((?:S|Part )(\d+)\)/.exec(r.title);
         const all = ((j._embedded && j._embedded.episodes) || []).filter(e => e.type === "regular" || !e.type);
         const season = sm ? Number(sm[1]) : Math.max(0, ...all.map(e => e.season));
-        const eps = all.filter(e => e.season === season);
+        const wholeRun = !sm && r.topRated;   // top-rated series without a season in the title: show the whole run
+        const eps = wholeRun ? all : all.filter(e => e.season === season);
         const rts = eps.map(e => e.runtime).filter(Boolean);
         const avg = rts.length ? Math.round(rts.reduce((a, b) => a + b, 0) / rts.length) : (eps.length ? (j.averageRuntime || j.runtime || 0) : 0);
-        META[k] = cache[k] = { v: 3, t: Date.now(), img: (j.image && (j.image.medium || j.image.original)) || "", desc: strip(j.summary),
-          eps: eps.length, avg: avg || 0, genres: (j.genres || []).slice(0, 3).join(", ") };
+        META[k] = cache[k] = { v: 4, t: Date.now(), img: (j.image && (j.image.medium || j.image.original)) || "", desc: strip(j.summary),
+          eps: eps.length, seasons: wholeRun ? new Set(all.map(e => e.season)).size : 0, avg: avg || 0, genres: (j.genres || []).slice(0, 3).join(", ") };
         save(); renderList();
       }
     } catch (e) {}
