@@ -1,5 +1,5 @@
 {
- "lastChecked": "13 Nov 2026",
+ "lastChecked": "17 Nov 2026",
  "shows": [
   {
    "title": "Black Doves (S2)",
@@ -86,38 +86,6 @@
    "major": true
   },
   {
-   "title": "Lupin (Part 4)",
-   "service": "Netflix",
-   "type": "Returning season",
-   "genre": "Crime / heist",
-   "date": "2026-10-23",
-   "dateLabel": "23 Oct 2026",
-   "status": "Confirmed",
-   "notes": "",
-   "source": "metromode.se",
-   "rt": 98,
-   "mc": null,
-   "tvmazeId": 50701,
-   "slug": "lupin-part-4",
-   "major": true
-  },
-  {
-   "title": "Dexter: Resurrection (S2)",
-   "service": "SkyShowtime",
-   "type": "Returning season",
-   "genre": "Crime drama",
-   "date": "2026-10-31",
-   "dateLabel": "31 Oct 2026",
-   "status": "Confirmed",
-   "notes": "",
-   "source": "metromode.se",
-   "rt": 92,
-   "mc": null,
-   "tvmazeId": 78665,
-   "slug": "dexter-resurrection-s2",
-   "major": true
-  },
-  {
    "title": "The Hunting Wives (S2)",
    "service": "Netflix",
    "type": "Returning season",
@@ -181,38 +149,6 @@
    "mc": null,
    "slug": "neuromancer",
    "tvmazeId": 75029,
-   "major": true
-  },
-  {
-   "title": "The Gilded Age (S4)",
-   "service": "HBO Max",
-   "type": "Returning season",
-   "genre": "Period drama",
-   "date": "2026-11-02",
-   "dateLabel": "2 Nov 2026",
-   "status": "Confirmed",
-   "notes": "En svensk kalender anger 8 nov i stället; kolla i appen",
-   "source": "hurbra.se",
-   "rt": 92,
-   "mc": 71,
-   "slug": "the-gilded-age-s4",
-   "tvmazeId": 34685,
-   "trailer": "MqRa6X31lUk",
-   "major": true
-  },
-  {
-   "title": "Agent-ish",
-   "service": "SVT Play",
-   "type": "New series",
-   "genre": "Comedy",
-   "date": "2026-10-30",
-   "dateLabel": "30 Oct 2026",
-   "status": "Confirmed",
-   "notes": "Kontorskomedi från sportagenternas värld; Henrik Larsson och John Guidetti medverkar som sig själva",
-   "source": "hurbra.se, svt.se",
-   "rt": null,
-   "mc": null,
-   "slug": "agent-ish",
    "major": true
   },
   {
@@ -796,6 +732,81 @@
    "slug": "chernobyl",
    "major": true,
    "topRated": true
+  },
+  {
+   "title": "Rivals (S2, del 2)",
+   "service": "Disney+",
+   "type": "Returning season",
+   "genre": "Comedy / drama",
+   "date": "2026-11-11",
+   "dateLabel": "11 Nov 2026",
+   "status": "Confirmed",
+   "notes": "Andra halvan av säsong 2",
+   "source": "hurbra.se, moviezine.se",
+   "rt": null,
+   "mc": null,
+   "slug": "rivals-s2",
+   "major": true
+  },
+  {
+   "title": "All's Fair (S2)",
+   "service": "Disney+",
+   "type": "Returning season",
+   "genre": "Legal drama",
+   "date": "2026-11-04",
+   "dateLabel": "4 Nov 2026",
+   "status": "Confirmed",
+   "notes": "Tre avsnitt vid premiären, därefter ett nytt avsnitt i veckan",
+   "source": "hurbra.se, moviezine.se",
+   "rt": null,
+   "mc": null,
+   "slug": "alls-fair-s2",
+   "major": true
+  },
+  {
+   "title": "Trinity",
+   "service": "Netflix",
+   "type": "New series",
+   "genre": "Thriller",
+   "date": "2026-12-01",
+   "dateLabel": "1 Dec 2026",
+   "status": "Reported",
+   "notes": "Thriller av Jed Mercurio med Gugu Mbatha-Raw och Richard Madden. Netflix-original lanseras världen över, även i Sverige.",
+   "source": "whats-on-netflix.com",
+   "rt": null,
+   "mc": null,
+   "slug": "trinity",
+   "major": true
+  },
+  {
+   "title": "Pride and Prejudice",
+   "service": "Netflix",
+   "type": "New series",
+   "genre": "Period drama",
+   "date": "2026-12-03",
+   "dateLabel": "3 Dec 2026",
+   "status": "Reported",
+   "notes": "Miniserie i sex delar med Emma Corrin och Jack Lowden. Netflix-original lanseras världen över, även i Sverige.",
+   "source": "whats-on-netflix.com",
+   "rt": null,
+   "mc": null,
+   "slug": "pride-and-prejudice",
+   "major": true
+  },
+  {
+   "title": "The Murder of JonBenét Ramsey",
+   "service": "Netflix",
+   "type": "New series",
+   "genre": "Crime drama",
+   "date": "2026-12-10",
+   "dateLabel": "10 Dec 2026",
+   "status": "Reported",
+   "notes": "Miniserie med Melissa McCarthy och Clive Owen. Netflix-original lanseras världen över, även i Sverige.",
+   "source": "whats-on-netflix.com",
+   "rt": null,
+   "mc": null,
+   "slug": "the-murder-of-jonbenet-ramsey",
+   "major": true
   }
  ]
 }
