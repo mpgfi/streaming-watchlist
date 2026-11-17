@@ -746,7 +746,8 @@
    "rt": null,
    "mc": null,
    "slug": "rivals-s2",
-   "major": true
+   "major": true,
+   "added": "2026-11-17"
   },
   {
    "title": "All's Fair (S2)",
@@ -761,7 +762,8 @@
    "rt": null,
    "mc": null,
    "slug": "alls-fair-s2",
-   "major": true
+   "major": true,
+   "added": "2026-11-17"
   },
   {
    "title": "Trinity",
@@ -776,7 +778,8 @@
    "rt": null,
    "mc": null,
    "slug": "trinity",
-   "major": true
+   "major": true,
+   "added": "2026-11-17"
   },
   {
    "title": "Pride and Prejudice",
@@ -791,7 +794,8 @@
    "rt": null,
    "mc": null,
    "slug": "pride-and-prejudice",
-   "major": true
+   "major": true,
+   "added": "2026-11-17"
   },
   {
    "title": "The Murder of JonBenét Ramsey",
@@ -806,7 +810,8 @@
    "rt": null,
    "mc": null,
    "slug": "the-murder-of-jonbenet-ramsey",
-   "major": true
+   "major": true,
+   "added": "2026-11-17"
   }
  ]
 }
