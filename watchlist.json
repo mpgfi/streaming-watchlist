@@ -1,23 +1,6 @@
 {
- "lastChecked": "17 Nov 2026",
+ "lastChecked": "20 Nov 2026",
  "shows": [
-  {
-   "title": "Black Doves (S2)",
-   "service": "Netflix",
-   "type": "Returning season",
-   "genre": "Spy thriller",
-   "date": "2026-11-05",
-   "dateLabel": "5 Nov 2026",
-   "status": "Confirmed",
-   "notes": "",
-   "source": "hurbra.se, cordcuttersnews.com",
-   "rt": 92,
-   "mc": 79,
-   "slug": "black-doves-s2",
-   "tvmazeId": 68407,
-   "trailer": "ItRs47e7xOs",
-   "major": true
-  },
   {
    "title": "Blade Runner 2099",
    "service": "Prime Video",
@@ -50,22 +33,6 @@
    "slug": "the-empress-kejsarinnan-s3",
    "tvmazeId": 59746,
    "trailer": "Rrg7p78KrBk",
-   "major": true
-  },
-  {
-   "title": "The Greatest",
-   "service": "Prime Video",
-   "type": "New series",
-   "genre": "Sports drama (Muhammad Ali)",
-   "date": "2026-11-04",
-   "dateLabel": "4 Nov 2026",
-   "status": "Confirmed",
-   "notes": "",
-   "source": "tomsguide.com, hurbra.se",
-   "rt": null,
-   "mc": null,
-   "slug": "the-greatest",
-   "tvmazeId": 78326,
    "major": true
   },
   {
@@ -228,21 +195,6 @@
    "tvmazeId": 48830,
    "major": true,
    "topRated": true
-  },
-  {
-   "title": "Stick (S2)",
-   "service": "Apple TV",
-   "type": "Returning season",
-   "genre": "Comedy",
-   "date": "2026-11-04",
-   "dateLabel": "4 Nov 2026",
-   "status": "Confirmed",
-   "notes": "Golfkomedi med Owen Wilson i huvudrollen",
-   "source": "hurbra.se",
-   "rt": null,
-   "mc": null,
-   "slug": "stick-s2",
-   "major": true
   },
   {
    "title": "The Altruists",
@@ -750,22 +702,6 @@
    "added": "2026-11-17"
   },
   {
-   "title": "All's Fair (S2)",
-   "service": "Disney+",
-   "type": "Returning season",
-   "genre": "Legal drama",
-   "date": "2026-11-04",
-   "dateLabel": "4 Nov 2026",
-   "status": "Confirmed",
-   "notes": "Tre avsnitt vid premiären, därefter ett nytt avsnitt i veckan",
-   "source": "hurbra.se, moviezine.se",
-   "rt": null,
-   "mc": null,
-   "slug": "alls-fair-s2",
-   "major": true,
-   "added": "2026-11-17"
-  },
-  {
    "title": "Trinity",
    "service": "Netflix",
    "type": "New series",
@@ -812,6 +748,22 @@
    "slug": "the-murder-of-jonbenet-ramsey",
    "major": true,
    "added": "2026-11-17"
+  },
+  {
+   "title": "The Åre Murders / Åremorden (S2)",
+   "service": "Netflix",
+   "type": "Returning season",
+   "genre": "Crime drama",
+   "date": "2026-12-20",
+   "dateLabel": "20 Dec 2026",
+   "status": "Confirmed",
+   "notes": "Ny säsong av den svenska deckarsuccén. Premiär i december enligt Moviezine.",
+   "source": "moviezine.se, whats-on-netflix.com",
+   "rt": null,
+   "mc": null,
+   "slug": "the-are-murders-s2",
+   "major": true,
+   "added": "2026-11-20"
   }
  ]
 }
